@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model role {
+  id    Int    @id @default(autoincrement())
+  name  String
+  users user[]
+}
+
+enum registerType{
+  Platform
+  google
+}
+
+
+model user {
+  id        Int     @id @default(autoincrement())
+  name      String
+  email     String
+  password  String?
+  googleProviderId String
+  registerType registerType
+  role_id   Int?    @default(2)
+  candidate role?   @relation(fields: [role_id], references: [id])
+
+  @@index([role_id], map: "user_role_id_fkey")
+}
+
+model category {
+  id      Int           @id @default(autoincrement())
+  name    String
+  subCats subCategory[]
+  products product[]
+
+  @@map("category")
+}
+
+model subCategory {
+  id        Int       @id @default(autoincrement())
+  name      String
+  c_id      Int?
+  candidate category? @relation(fields: [c_id], references: [id])
+  products product[]
+
+  @@index([c_id], map: "subCategory_c_id_fkey")
+  @@map("subCategory")
+}
+
+model product {
+  id      Int   @id @default(autoincrement())
+  name    String
+  price   String
+  quantity  String
+  c_id    Int?
+  sub_id  Int?
+  category category? @relation(fields: [c_id], references: [id])
+  subCategory subCategory? @relation(fields: [sub_id], references: [id])
+
+  @@index([c_id], map: "product_c_id_fkey")
+  @@index([sub_id], map: "product_sub_id_fkey")
+  @@map("product")
+}
