@@ -33,11 +33,10 @@ export class SubCategoryController {
     return this.subCategoryService.createSubCategory(postData);
   }
 
-  @Get('sub-list')
+  @Get('sub-list/:id')
   @Render('sub-category-list')
-  async list() {
-    let data = await this.productService.showlist();
-    // console.log(data);
+  async list(@Param('id') id: number) {
+    let data = await this.subCategoryService.showlist(+id);
     return { data: data };
   }
 
@@ -46,16 +45,17 @@ export class SubCategoryController {
   async findOne(@Param('id') id: string) {
     let data1 = await this.subCategoryService.findAll();
     let data = await this.subCategoryService.findOne(+id);
-      return { data: data, data1: data1 };
+
+    return { data: data, data1: data1 };
   }
 
-  @Patch(':id')
+  @Patch('/update/:id')
   update(@Param('id') id: string, @Body() postData: UpdateSubCategoryDto) {
     return this.subCategoryService.update(+id, postData);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Patch('/delete/:id')
+  remove(@Param('id') id: number) {
     return this.subCategoryService.remove(+id);
   }
 }

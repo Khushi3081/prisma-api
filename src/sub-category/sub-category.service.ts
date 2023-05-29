@@ -20,15 +20,40 @@ export class SubCategoryService {
     const categories = await this.prisma.category.findMany({});
     return { category: categories };
   }
+  async showlist(id: number) {
+    let count = await this.prisma.subCategory.aggregate({
+      _count: {
+        id: true,
+      },
+      where: {
+        deleted_at: null,
+      },
+    });
+    let total = count._count.id;
+    let total_table = await Math.ceil(total / 3);
+    let page_no = id || 1;
+    let offset = (page_no - 1) * 3;
+    const subcategories = await this.prisma.subCategory.findMany({
+      skip: offset,
+      take: 3,
+      include: {
+        candidate: true,
+      },
+      where: {
+        deleted_at: null,
+      },
+    });
 
+    return { subcategories, total_table };
+  }
   async findOne(id: number) {
     let data = await this.prisma.subCategory.findUnique({
       where: {
         id: id,
       },
       select: {
-        id:true,
-        name:true,
+        id: true,
+        name: true,
         candidate: {
           select: {
             name: true,
@@ -36,7 +61,7 @@ export class SubCategoryService {
         },
       },
     });
-console.log(data,'>>>>>>>');
+    // console.log(data, '{{{{}}}}}}}');
 
     return data;
   }
@@ -45,15 +70,24 @@ console.log(data,'>>>>>>>');
     let result = await this.prisma.subCategory.update({
       where: {
         id: id,
+        // deleted_at:null
       },
       data: {
         name: postData.name,
+        c_id: parseInt(postData.c_name),
       },
     });
     return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} subCategory`;
+  async remove(id: number) {
+    let result = await this.prisma.subCategory.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        deleted_at: new Date(),
+      },
+    });
   }
 }

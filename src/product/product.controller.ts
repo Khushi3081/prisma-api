@@ -30,26 +30,32 @@ export class ProductController {
     return this.productService.createProduct(postData);
   }
 
-  @Get('product-list')
+  @Get('product-list/:id')
   @Render('product-list')
-  async list() {
-    let data = await this.productService.showlist();
+  async list(@Param('id') id: number) {
+    let data = await this.productService.showlist(+id);
     return { data: data };
   }
-
+  @Get('sub/:id')
+  async findAll(@Param('id') id: string) {
+    const subCategory = await this.productService.findSub(+id);
+    return { subcategory: subCategory };
+  }
   @Get('/:id')
-  async subcategoryshow(@Param('id') id: string) {
-    const subcategory = await this.productService.subfindAll(+id);
-    return subcategory;
+  @Render('update-product')
+  async findOne(@Param('id') id: string) {
+    const category = await this.productService.categoryfindAll();
+    const data = await this.productService.subfindAll(+id);
+    return { category, data };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  @Patch('/update/:id')
+  update(@Param('id') id: string, @Body() postData: UpdateProductDto) {
+    return this.productService.update(+id, postData);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Patch('/delete/:id')
+  remove(@Param('id') id: number) {
     return this.productService.remove(+id);
   }
 }

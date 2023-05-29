@@ -35,6 +35,9 @@ model user {
 model category {
   id      Int           @id @default(autoincrement())
   name    String
+  created_at DateTime   @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
   subCats subCategory[]
   products product[]
 
@@ -45,6 +48,9 @@ model subCategory {
   id        Int       @id @default(autoincrement())
   name      String
   c_id      Int?
+  created_at DateTime   @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
   candidate category? @relation(fields: [c_id], references: [id])
   products product[]
 
@@ -59,6 +65,9 @@ model product {
   quantity  String
   c_id    Int?
   sub_id  Int?
+  created_at DateTime   @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
   category category? @relation(fields: [c_id], references: [id])
   subCategory subCategory? @relation(fields: [sub_id], references: [id])
 

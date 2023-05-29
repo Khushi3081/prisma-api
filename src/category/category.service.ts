@@ -1,6 +1,7 @@
 import { Get, Injectable, Render } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { categoryDataDto } from './dto/category.dto';
+import { identity } from 'rxjs';
 
 @Injectable()
 export class CategoryService {
@@ -13,9 +14,29 @@ export class CategoryService {
       },
     });
   }
-  async showlist() {
-    let data = this.prisma.category.findMany({});
-    return data;
+  async showlist(id: number) {
+
+    let count = await this.prisma.category.aggregate({
+      _count: {
+        id: true,
+      },
+      where: {
+        deleted_at: null,
+      },
+    });
+    let total = count._count.id;
+    let total_table = await Math.ceil(total / 3);
+    let page_no = id || 1;
+    let offset = (page_no - 1) * 3;
+
+    let data = await this.prisma.category.findMany({
+      skip: offset,
+      take: 3,
+      where: {
+        deleted_at: null,
+      },
+    });
+    return { data, total_table };
   }
 
   async findOne(id: number) {
@@ -36,6 +57,18 @@ export class CategoryService {
         name: postData.name,
       },
     });
+    console.log(result);
     return result;
+  }
+
+  async remove(id: number) {
+    let result = await this.prisma.category.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        deleted_at: new Date(),
+      },
+    });
   }
 }

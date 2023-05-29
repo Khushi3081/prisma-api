@@ -25,10 +25,10 @@ export class CategoryController {
     return this.categoryService.createCategory(postData);
   }
 
-  @Get('category-list')
+  @Get('category-list/:id')
   @Render('category-list')
-  async list() {
-    let data = await this.categoryService.showlist();
+  async list(@Param('id') id: number) {
+    let data = await this.categoryService.showlist(+id);
     return { data: data };
   }
 
@@ -41,8 +41,13 @@ export class CategoryController {
     return { data: data };
   }
 
-  @Patch(':id')
+  @Patch('/update/:id')
   update(@Param('id') id: string, @Body() postData: updateCategoryDataDto) {
     return this.categoryService.update(+id, postData);
+  }
+
+  @Patch('/delete/:id')
+  remove(@Param('id') id: number) {
+    return this.categoryService.remove(+id);
   }
 }

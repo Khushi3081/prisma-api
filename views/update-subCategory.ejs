@@ -19,14 +19,13 @@
   </style>
   <body>
     <div class="container">
-      <form action="/sub-category" method="post">
+      <form action="">
         <div class="mb-3">
           <label for="formGroupExampleInput" class="form-label"
             >Add Sub-category</label
           >
-          <% console.log(data)%>
           <div>
-          <select class="form-select" aria-label="Default select example" name="c_id">
+          <select class="form-select" aria-label="Default select example" name="c_id" id="category">
             <option selected>Select One Category</option>
             <% for(let i=0;i<data1.category.length;i++) {%>
               <option value="<%=data1.category[i].id%>" <% if(data1.category[i].name == data.candidate.name) {%> Selected <% } %> ><%=data1.category[i].name%></option>
@@ -68,15 +67,17 @@
   <script>
     async function validate() {
       let id = document.getElementById('sub_id').value;
+      let c_name = document.getElementById('category').value;
+      console.log(c_name);
       let name = document.getElementById('formGroupExampleInput').value;
-      console.log(id);
-      let qry_str = await fetch(`http://localhost:5000/sub-category/${id}`, {
+      let qry_str = await fetch(`http://localhost:5000/sub-category/update/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name }),
-      });
+        body: JSON.stringify({ c_name,name }),
+      }).then(window.location.href = '/sub-category/sub-list');
+
     }
   </script>
 </html>

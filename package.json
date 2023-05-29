@@ -22,7 +22,7 @@
     "seed:user": "ts-node src/user/seeder/user.seed.ts"
   },
   "dependencies": {
-    "@nestjs/common": "^9.0.0",
+    "@nestjs/common": "^9.4.2",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/mapped-types": "*",

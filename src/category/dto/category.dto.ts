@@ -1,4 +1,7 @@
-export class categoryDataDto{
-    name:string
-
+export class categoryDataDto {
+  id:number
+  name: string;
+  created_at: Date;
+  updated_at: Date;
+  deleted_at: Date;
 }
