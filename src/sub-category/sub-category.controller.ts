@@ -28,7 +28,7 @@ export class SubCategoryController {
   }
 
   @Post('')
-  @Redirect('sub-category/sub-list')
+  @Redirect('sub-category/sub-list/1')
   async create(@Body() postData: CreateSubCategoryDto) {
     return this.subCategoryService.createSubCategory(postData);
   }

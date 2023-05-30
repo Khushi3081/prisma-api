@@ -8,11 +8,14 @@ import {
   Delete,
   Render,
   Redirect,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { query } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('product')
 export class ProductController {
@@ -22,12 +25,16 @@ export class ProductController {
   @Render('product')
   async categoryshow() {
     const category = await this.productService.categoryfindAll();
-    return category;
+    return { category };
   }
   @Post()
-  @Redirect('product/product-list')
-  create(@Body() postData: CreateProductDto) {
-    return this.productService.createProduct(postData);
+  @Redirect('product/product-list/1')
+  @UseInterceptors(FileInterceptor('productimage', { dest: './assets' }))
+  create(
+    @Body() postData: CreateProductDto,
+    @UploadedFile() productimage: Express.Multer.File,
+  ) {
+    return this.productService.createProduct(postData, productimage);
   }
 
   @Get('product-list/:id')
@@ -49,9 +56,15 @@ export class ProductController {
     return { category, data };
   }
 
-  @Patch('/update/:id')
-  update(@Param('id') id: string, @Body() postData: UpdateProductDto) {
-    return this.productService.update(+id, postData);
+  @Post('/update/:id')
+  @Redirect('/product-list/1')
+  @UseInterceptors(FileInterceptor('productimage', { dest: './assets' }))
+  update(
+    @Param('id') id: string,
+    @Body() postData: UpdateProductDto,
+    @UploadedFile() productimage: Express.Multer.File,
+  ) {
+    return this.productService.update(+id, postData, productimage);
   }
 
   @Patch('/delete/:id')

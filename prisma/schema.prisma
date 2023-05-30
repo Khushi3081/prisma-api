@@ -13,7 +13,7 @@ model role {
   users user[]
 }
 
-enum registerType{
+enum register_type{
   Platform
   google
 }
@@ -23,9 +23,12 @@ model user {
   id        Int     @id @default(autoincrement())
   name      String
   email     String
-  password  String?
-  googleProviderId String
-  registerType registerType
+  password  String
+  google_provider_id String?
+  register_type register_type?
+  created_at DateTime   @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
   role_id   Int?    @default(2)
   candidate role?   @relation(fields: [role_id], references: [id])
 
@@ -63,6 +66,8 @@ model product {
   name    String
   price   String
   quantity  String
+  image_name String
+  image_path  String
   c_id    Int?
   sub_id  Int?
   created_at DateTime   @default(now())

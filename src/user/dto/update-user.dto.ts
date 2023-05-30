@@ -1,15 +1,11 @@
-export enum register_type {
+export enum registerType {
   Platform,
   google,
 }
-
-export default class userDataDto {
+export default class UpdateUserDto {
   id: number;
   name: string;
   email: string;
-  password: string;
-  google_provider_id: string;
-  register_type: register_type;
   role_id: number;
   created_at: Date;
   updated_at: Date;

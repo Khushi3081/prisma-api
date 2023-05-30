@@ -18,8 +18,8 @@ export class AuthService {
         name: postData.name,
         email: postData.email,
         password: postData.password,
-        googleProviderId: 'null',
-        registerType: 'Platform',
+        google_provider_id: 'null',
+        register_type: 'Platform',
       },
     });
   }
@@ -39,9 +39,9 @@ export class AuthService {
             name: name,
             email: req.user.emails[0].value,
             password: req.user.password,
-            googleProviderId: req.user.id,
-            registerType: req.user.provider,
-            role_id:2
+            google_provider_id: req.user.id,
+            register_type: req.user.provider,
+            role_id: 2,
           },
         });
       }

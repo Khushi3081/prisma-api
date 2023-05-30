@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Redirect,
   Render,
@@ -32,7 +33,7 @@ export class AuthController {
   @Get()
   @Render('register')
   root() {}
-
+    
   @Post('')
   @Redirect('/login')
   @UseInterceptors(AnyFilesInterceptor())

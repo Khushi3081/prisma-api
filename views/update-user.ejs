@@ -16,8 +16,7 @@
       width: 1440px;
       margin: auto;
     }
-  
-    .back-button {
+    .button {
       border-radius: 0.25rem;
       border: 1px solid;
       padding: 0.5rem 1rem;
@@ -26,29 +25,41 @@
       text-decoration: none;
     }
   </style>
+  <% console.log(data,"+++++++++")%>
   <body>
     <div class="container">
       <form action="">
         <div class="mb-3">
           <label for="formGroupExampleInput" class="form-label"
-            >Add Category</label
+            >Edit User</label
           >
+          <input type="text" id="r_id" name="r_id" value="<%= data[0].id %>" hidden />
+
           <input
             type="text"
-            id="c_id"
-            name="id"
-            value="<%= data.id %>"
-            hidden
-          />
-          <input
-            type="text"
-            name="category"
+            name="user"
             class="form-control"
-            id="formGroupExampleInput"
-            placeholder="Category Name"
-            value="<%=data.name %>"
+            id="uname"
+            placeholder="User Name"
+            value="<%=data[0].name %>"
           />
+        </br>
+          <input
+            type="text"
+            name="email"
+            class="form-control"
+            id="email"
+            placeholder="User Email"
+            value="<%=data[0].email %>"
+          />
+            </br>
+          <select class="form-select" aria-label="Default select example" name="r_name" id="role">
+            <% for(let i=0;i<role.length;i++) {%>
+            <option value="<%=role[i].id%>" <% if(role[i].name == data[0].candidate.name) {%> Selected <% } %> ><%=role[i].name %></option>
+          <% } %>
+        </select>
         </div>
+   
         <div>
           <input
             type="button"
@@ -57,34 +68,29 @@
             onclick="validate()"
           />
         </div>
-      </form></br>
+      </form> </br>
       <div>
-        <a class="back-button" href="/admin" >Back to HomePage</a>
+        <a class="button" href="/admin" >Back to HomePage</a>
       </div>
     </div>
   </body>
-  <script
-    src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-    crossorigin="anonymous"
-  ></script>
+
   <script>
     async function validate() {
-      let id = document.getElementById('c_id').value;
-      let name = document.getElementById('formGroupExampleInput').value;
-      console.log(id);
-      let qry_str = await fetch(`http://localhost:5000/category/update/${id}`, {
+      let id = document.getElementById('r_id').value;
+      let name = document.getElementById('uname').value;
+      let email = document.getElementById('email').value;
+      let role_name = document.getElementById('role').value;
+      console.log(name,email,role_name);
+      let qry_str = await fetch(`/user/update/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name }),
-      }).then((window.location.href = '/category/category-list/1'));
+        body: JSON.stringify({ id,name,email,role_name }),
+      }).then((window.location.href = '/user/user-list/1'));
+  
+
     }
   </script>
 </html>

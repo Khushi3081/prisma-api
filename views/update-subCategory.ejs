@@ -16,6 +16,14 @@
       width: 1440px;
       margin: auto;
     }
+    .back-button {
+      border-radius: 0.25rem;
+      border: 1px solid;
+      padding: 0.5rem 1rem;
+      color: #fff;
+      background-color: blueviolet;
+      text-decoration: none;
+    }
   </style>
   <body>
     <div class="container">
@@ -51,7 +59,10 @@
           </div>
         </div>
         <input type="submit" class="btn btn-primary" value="Submit" onclick="validate()" />
-      </form>
+      </form></br>
+      <div>
+        <a class="back-button" href="/admin" >Back to HomePage</a>
+      </div>
     </div>
   </body>
   <script
@@ -76,7 +87,7 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ c_name,name }),
-      }).then(window.location.href = '/sub-category/sub-list');
+      }).then(window.location.href = '/sub-category/sub-list/1');
 
     }
   </script>

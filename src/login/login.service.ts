@@ -2,7 +2,6 @@ import { Injectable, Redirect } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { loginDataDto } from './dto/login.dto';
 import * as bcrypt from 'bcryptjs';
-import { UserService } from 'src/user/service/user.service';
 import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class LoginService {

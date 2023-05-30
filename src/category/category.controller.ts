@@ -20,7 +20,7 @@ export class CategoryController {
   root() {}
 
   @Post('')
-  @Redirect('category/category-list')
+  @Redirect('category/category-list/1')
   async createCategory(@Body() postData: categoryDataDto) {
     return this.categoryService.createCategory(postData);
   }

@@ -7,14 +7,14 @@ import { PrismaService } from 'src/prisma.service';
 export class ProductService {
   constructor(private prisma: PrismaService) {}
 
-  async createProduct(postData) {
-    // console.log(postData);
-
+  async createProduct(postData, productimage) {
     return this.prisma.product.create({
       data: {
         name: postData.productname,
         price: postData.productprice,
         quantity: postData.productquntity,
+        image_name: productimage.filename,
+        image_path: productimage.path,
         c_id: parseInt(postData.c_id),
         sub_id: parseInt(postData.sub_id),
       },
@@ -49,7 +49,6 @@ export class ProductService {
         deleted_at: null,
       },
     });
-    // console.log(data[0].subCategory.candidate, '{{}}{{{}');
     return { data, total_table };
   }
 
@@ -59,18 +58,13 @@ export class ProductService {
         subCats: true,
       },
     });
-    // return { category: categories };
   }
   async findSub(id: number) {
-    console.log(id);
-
     let data = await this.prisma.subCategory.findMany({
       where: {
         c_id: id,
       },
     });
-    // console.log(data, '{{{{{{{{{{');
-
     return data;
   }
   async subfindAll(id: number) {
@@ -86,11 +80,10 @@ export class ProductService {
         },
       },
     });
-    // console.log(data[0].subCategory.candidate, '{{}}{{{}');
     return data;
   }
 
-  async update(id: number, postData) {
+  async update(id: number, postData, productimage) {
     let result = await this.prisma.product.update({
       where: {
         id: id,
@@ -99,6 +92,8 @@ export class ProductService {
         name: postData.name,
         price: postData.price,
         quantity: postData.quantity,
+        image_name: productimage.filename,
+        image_path: productimage.path,
         c_id: parseInt(postData.c_id),
         sub_id: parseInt(postData.sub_id),
       },
@@ -115,6 +110,5 @@ export class ProductService {
         deleted_at: new Date(),
       },
     });
-    console.log(result);
   }
 }

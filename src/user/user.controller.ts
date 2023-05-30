@@ -1,0 +1,49 @@
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Render,
+  Patch,
+} from '@nestjs/common';
+import { UserService } from './user.service';
+import { user } from '@prisma/client';
+import userDataDto from './dto/user.dto';
+import UpdateUserDto from './dto/update-user.dto';
+@Controller('user')
+export class UserController {
+  constructor(private readonly UserService: UserService) {}
+  @Get()
+  async getAllTodo(): Promise<user[]> {
+    return this.UserService.getAllUser();
+  }
+  // @Post()
+  // async createTodo(@Body() postData: userDataDto) {
+  //   return this.UserService.createUser(postData);
+  // }
+
+  @Get('user-list/:id')
+  @Render('user-list')
+  async list(@Param('id') id: number) {
+    let data = await this.UserService.showlist(+id);
+    return { data: data };
+  }
+  @Get(':id')
+  @Render('update-user')
+  async findOne(@Param('id') id: number) {
+    const role = await this.UserService.findRole();
+    const data = await this.UserService.userfindOne(+id);
+    return { data, role };
+  }
+
+  @Patch('/update/:id')
+  update(@Param('id') id: string, @Body() postData: UpdateUserDto) {
+    return this.UserService.update(+id, postData);
+  }
+
+  @Patch('/delete/:id')
+  remove(@Param('id') id: number) {
+    return this.UserService.remove(+id);
+  }
+}

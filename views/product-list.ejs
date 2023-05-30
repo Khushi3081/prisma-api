@@ -25,6 +25,18 @@
     td{
       padding-right: 2rem;
     }
+    .back-button {
+      border-radius: 0.25rem;
+      border: 1px solid;
+      padding: 0.5rem 1rem;
+      color: #fff;
+      background-color: blueviolet;
+      text-decoration: none;
+    }
+    .img-style{
+      height: 50px;
+      width: 90px;
+    }
   </style>
 </head>
 
@@ -42,7 +54,7 @@
               <td>Product-Name</td>
               <td>Product-price</td>
               <td>Product-Quantity</td>
-
+              <td>Product Image</td>
             </tr>
           </thead>
           <tbody>
@@ -54,6 +66,7 @@
                 <td><%-e.name%></td>
                 <td><%-e.price%></td>
                 <td><%-e.quantity%></td>
+                <td><img class="img-style" src="/<%=e.image_path.slice(7)%>"></td>
                 <td><a href="/product/<%-e.id%>">Edit</a></td>
                 <td><input type="button" onclick="deleteData('<%= e.id %>')"value="Delete" ></td>
 
@@ -69,7 +82,10 @@
           <a class="button" href="/product/product-list/<%= i %>"><%=i %></a>
         <% } %>
     </div>
-  </div>
+  </div></br>
+  <div>
+    <a class="back-button" href="/admin" >Back to HomePage</a>
+  </div>  
 </body>
 
 </html>

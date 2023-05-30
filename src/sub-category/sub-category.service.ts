@@ -47,7 +47,7 @@ export class SubCategoryService {
     return { subcategories, total_table };
   }
   async findOne(id: number) {
-    let data = await this.prisma.subCategory.findUnique({
+    let data = await this.prisma.subCategory.findMany({
       where: {
         id: id,
       },
@@ -61,8 +61,6 @@ export class SubCategoryService {
         },
       },
     });
-    // console.log(data, '{{{{}}}}}}}');
-
     return data;
   }
 
