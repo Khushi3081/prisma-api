@@ -1,5 +1,6 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Req, Res } from '@nestjs/common';
 import { AppService } from './app.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller()
 export class AppController {
@@ -9,12 +10,9 @@ export class AppController {
   // getHello(): string {
   //   return this.appService.getHello();
   // }
-  @Get()
-  @Render('dashboard.ejs')
-  root() {}
   
+
   @Get('admin')
   @Render('admin.ejs')
-  admin(){}
-  
+  admin() {}
 }

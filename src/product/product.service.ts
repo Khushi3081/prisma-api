@@ -89,13 +89,14 @@ export class ProductService {
         id: id,
       },
       data: {
-        name: postData.name,
-        price: postData.price,
-        quantity: postData.quantity,
+        name: postData.productname,
+        price: postData.productprice,
+        quantity: postData.productquntity,
         image_name: productimage.filename,
         image_path: productimage.path,
         c_id: parseInt(postData.c_id),
         sub_id: parseInt(postData.sub_id),
+        updated_at: new Date(),
       },
     });
     return result;

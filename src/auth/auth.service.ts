@@ -30,15 +30,18 @@ export class AuthService {
       let fname = req.user.name.familyName;
       let lname = req.user.name.givenName;
       let name = fname + lname;
-
       if (!req.user) {
         return `no user from Google`;
       } else {
-        await this.prisma.user.create({
-          data: {
+        return await this.prisma.user.upsert({
+          where: {
+            email: req.user.emails[0].value,
+          },
+          update: {},
+          create: {
             name: name,
             email: req.user.emails[0].value,
-            password: req.user.password,
+            password: '0',
             google_provider_id: req.user.id,
             register_type: req.user.provider,
             role_id: 2,

@@ -6,22 +6,33 @@ import {
   Body,
   Render,
   Patch,
+  Redirect,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { user } from '@prisma/client';
 import userDataDto from './dto/user.dto';
 import UpdateUserDto from './dto/update-user.dto';
+import adminUserDataDto from './dto/admin-user.dto';
 @Controller('user')
 export class UserController {
   constructor(private readonly UserService: UserService) {}
+
   @Get()
-  async getAllTodo(): Promise<user[]> {
-    return this.UserService.getAllUser();
+  @Render('admin-user')
+  root() {}
+
+  @Post()
+  @Redirect('/user/user-list/:id')
+  async addUser(@Body() postData: adminUserDataDto) {
+    let data = await this.UserService.createUser(postData);
+    return data;
   }
-  // @Post()
-  // async createTodo(@Body() postData: userDataDto) {
-  //   return this.UserService.createUser(postData);
-  // }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    const users = await this.UserService.findOne(+id);
+    return { users };
+  }
 
   @Get('user-list/:id')
   @Render('user-list')
@@ -29,9 +40,9 @@ export class UserController {
     let data = await this.UserService.showlist(+id);
     return { data: data };
   }
-  @Get(':id')
+  @Get('show/:id')
   @Render('update-user')
-  async findOne(@Param('id') id: number) {
+  async findOnes(@Param('id') id: number) {
     const role = await this.UserService.findRole();
     const data = await this.UserService.userfindOne(+id);
     return { data, role };

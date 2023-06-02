@@ -1,21 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { user, Prisma } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
+const saltRounds = 10;
+
 @Injectable()
 export class UserService {
-  findOne(email: String) {
-    throw new Error('Method not implemented.');
-  }
   constructor(private prisma: PrismaService) {}
+
+  findOne(id: number) {
+    return this.prisma.user.findFirst({
+      where: { id: id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+      },
+    });
+  }
   async getAllUser(): Promise<user[]> {
     return this.prisma.user.findMany();
   }
 
-  async createUser(data: user): Promise<user> {
+  async createUser(postData): Promise<user> {
+    const hashPass = await bcrypt.hash(postData.password, saltRounds);
+    postData.password = hashPass;
     return this.prisma.user.create({
-      data,
+      data: {
+        name: postData.name,
+        email: postData.email,
+        password: postData.password,
+        role_id: 3,
+        google_provider_id: 'null',
+        register_type: 'Platform',
+      },
     });
   }
+
   async findRole() {
     let data = await this.prisma.role.findMany({});
     return data;

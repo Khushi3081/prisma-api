@@ -15,7 +15,6 @@ export class CategoryService {
     });
   }
   async showlist(id: number) {
-
     let count = await this.prisma.category.aggregate({
       _count: {
         id: true,
@@ -55,6 +54,7 @@ export class CategoryService {
       },
       data: {
         name: postData.name,
+        updated_at: new Date(),
       },
     });
     console.log(result);

@@ -15,13 +15,21 @@
         width: 1470px;
         margin: 0 auto;
       }
+      #logo{
+        height: 40px;
+        width: 40px;
+      }
+      .cart {
+        height: 40px;
+        width: 40px;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <img src="./assets/photos/image-2.jpg" alt="PM" />
+          <img id="logo" src="../photos/image-2.jpg" alt="PM" />
           <button
             class="navbar-toggler"
             type="button"
@@ -61,7 +69,10 @@
                 </ul>
               </li>
               <li class="nav-item">
-                <a class="nav-link disabled">Disabled</a>
+                <a class="nav-link" href="/cart/cart-list/:id">Show cart</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/dashboard/logout">Logout</a>
               </li>
             </ul>
             <form class="d-flex" role="search">
@@ -78,16 +89,37 @@
           </div>
         </div>
       </nav>
-     
-    <script
-      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-      crossorigin="anonymous"
-    ></script>
+    </br>
+    <div class="row">
+      <% data.forEach(e => {%>
+      <div class="col-sm-3" >
+        <div class="card" style="width: 18rem;border: 1px solid black;">
+          <img style="width: 17rem; height:16rem" class="card-img-top" src="<%=e.image_path.slice(7)%>" alt="Card image cap" />
+          <div class="card-body">
+          <div><input type="text" id="<%= e.id %>" value="<%= e.id %>" hidden></div>
+          <div style="flex-direction: row; display: flex; justify-content: space-between;">
+            <h5 id= "name" class="card-title"><%= e.name %></h5>
+            <p class="card-text">Rs.<%= e.price%></p>
+          </div>     
+                <input type="button" id="<%= e.id %>" onclick="addProduct(this.id)" value="add to cart">
+          </div>
+        </div>
+      </div>
+        <%})%>
+    </div>
   </body>
+  <script>
+    async function addProduct(id) {
+      let ids = document.getElementById(id).value;
+      let qry_str =await  fetch(`/cart/addCart`,{
+        method:"post",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          id
+        })
+      })
+    }
+  </script>
 </html>

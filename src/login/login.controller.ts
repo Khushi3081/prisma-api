@@ -7,51 +7,82 @@ import {
   Render,
   Res,
   UseGuards,
-  Request,
+  Response,
+  HttpStatus,
+  Req,
 } from '@nestjs/common';
 import { LoginService } from './login.service';
 import { loginDataDto } from './dto/login.dto';
-import { Response } from 'express';
-import { JwtLoginGuard } from './jwt-login.guard';
+import { loginGuard } from './jwt-login.guard';
 import { JwtService } from '@nestjs/jwt';
-import { LocalAuthGuard } from './local-auth.guard';
+import { jwtConstants } from './constants';
+import { AuthEntity } from './entitities/login-entity';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from 'src/auth/auth.service';
 
+@ApiTags('auth')
 @Controller('login')
 export class LoginController {
   prisma: any;
-  constructor(private readonly loginService: LoginService) {}
-  private jwtService: JwtService;
+  constructor(
+    private readonly loginService: LoginService,
+    private jwtService: JwtService,
+    private AuthService:AuthService
+  ) {}
+
   @Get()
   @Render('login')
   root() {}
 
-  // @Post()
-  // async checkUser(@Body() postData: loginDataDto, @Res() res: Response) {
-  //   const condition = await this.loginService.checkUser(postData);
-  //   console.log(condition);
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleRegister() {}
+  
+  @Get('google/callback')
+  @Redirect('/dashboard')
+  @UseGuards(AuthGuard('google'))
+  googleAuthRedirect(@Req() req) {
+    return this.AuthService.googleRegister(req);
+  }
+  
+  @Post('auth')
+  @ApiOkResponse({ type: AuthEntity })
+  async login(
+    @Req() req: Request,
+    @Response()
+    res,
+    @Body() postData: loginDataDto,
+  ): Promise<any> {
+    let result = await this.loginService.login(postData);
+    if (result.access_token) {
+      res.cookie('access_token', result.access_token, { httpOnly: true });
+      const payload: any = await this.jwtService.verifyAsync(
+        result.access_token,
+        {
+          secret: jwtConstants.secret,
+        },
+      );
 
-  //   if (condition) {
-  //     // res.send({
-  //     //   accessToken: 'dasfjakdassad',
-  //     // });
-  //     // console.log('condition', condition);
-  //     return {
-  //       access_token: 'dasda',
-  //     };
-  //     // res.redirect('/');
-  //   } else {
-  //     // console.log('condition', condition);
-  //     res.redirect('/login');
-  //   }
+      res.cookie('data', payload, { httpOnly: true });
+      return res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
+        data: result,
+        message: `Login Successfull`,
+      });
+    } else {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        status: HttpStatus.BAD_REQUEST,
+        data: null,
+        message: `Incorrect Credentials`,
+      });
+    }
+  }
+
+  // @UseGuards(AuthGuard)
+  // @Get('/category')
+  // async getProfile(@Req() req: Request): Promise<any> {
+  //   return req.user;
   // }
-  @UseGuards(LocalAuthGuard)
-  @Post('/auth')
-  async login(@Request() req): Promise<any> {
-    return this.loginService.login(req.user);
-  }
-  @UseGuards(JwtLoginGuard)
-  @Get('/category')
-  async getProfile(@Request() req): Promise<any> {
-    return req.user;
-  }
 }

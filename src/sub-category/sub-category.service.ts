@@ -73,6 +73,7 @@ export class SubCategoryService {
       data: {
         name: postData.name,
         c_id: parseInt(postData.c_name),
+        updated_at: new Date(),
       },
     });
     return result;

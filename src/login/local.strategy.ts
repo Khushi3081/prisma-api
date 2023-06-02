@@ -9,20 +9,20 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ usernameField: 'email', passwordField: 'password' });
   }
 
-  async validate(email, password): Promise<any> {
-    try {
-      const user = await this.loginService.checkUser({ email, password });
+//   async validate(email, password): Promise<any> {
+//     try {
+//       const user = await this.loginService.login({ email, password });
 
-      if (!user) {
-        // return {
-        throw new UnauthorizedException();
-        // };
-        // throw new UnauthorizedException();
-        // res.send("incorrect credentials");
-      }
-      return user;
-    } catch (error) {
-      console.log(error);
-    }
-  }
+//       if (!user) {
+//         // return {
+//         throw new UnauthorizedException();
+//         // };
+//         // throw new UnauthorizedException();
+//         // res.send("incorrect credentials");
+//       }
+//       return user;
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }
 }

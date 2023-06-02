@@ -81,7 +81,7 @@
       let c_name = document.getElementById('category').value;
       console.log(c_name);
       let name = document.getElementById('formGroupExampleInput').value;
-      let qry_str = await fetch(`http://localhost:5000/sub-category/update/${id}`, {
+      let qry_str = await fetch(`/sub-category/update/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

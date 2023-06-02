@@ -14,10 +14,14 @@ import { AuthService } from './auth.service';
 import userDataDto from 'src/user/dto/user.dto';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -33,11 +37,12 @@ export class AuthController {
   @Get()
   @Render('register')
   root() {}
-    
+
   @Post('')
   @Redirect('/login')
   @UseInterceptors(AnyFilesInterceptor())
   async createUser(@Body() postData: userDataDto) {
+
     return this.authService.createUser(postData);
   }
 }

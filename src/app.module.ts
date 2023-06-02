@@ -10,6 +10,12 @@ import { SubCategoryModule } from './sub-category/sub-category.module';
 import { ProductModule } from './product/product.module';
 import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
 // import { MulterModule } from '@nestjs/platform-express';
+import { CartModule } from './cart/cart.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+
+import { OrderModule } from './order/order.module';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -21,8 +27,21 @@ import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
     SubCategoryModule,
     ProductModule,
     ForgotPasswordModule,
+    CartModule,
+    DashboardModule,
+    OrderModule,
+    JwtModule,
+    MailerModule.forRoot({
+      transport: {
+        host: "smtp.gmail.com",
+        auth: {
+          user: "rachchh.khushi30@gmail.com",
+          pass: "lfmoqlbpeofvzpmx",
+        },
+      },
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtService],
 })
 export class AppModule {}

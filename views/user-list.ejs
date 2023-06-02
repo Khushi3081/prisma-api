@@ -56,9 +56,9 @@
                     <td><%-element.id%></td>
                     <td><%-element.name%></td>
                     <td><%-element.email%></td>
+                    <td><%-element.register_type%></td>
                     <td><%-element.candidate.name%></td>
-                    <td><%-element.registerType%></td>
-                    <td><a href="/user/<%-element.id%>">Edit</a></td>
+                    <td><a href="/user/show/<%-element.id%>">Edit</a></td>
                     <td><input type="button" onclick="deleteData('<%= element.id %>')"value="Delete" ></td>
                 </tr>
                 <%})%>

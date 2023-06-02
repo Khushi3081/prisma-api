@@ -1,3 +1,5 @@
 export class CreateForgotPasswordDto {
-  email: string;
+  email?: any;
+  token?: any;
+  user_id?: any[];
 }
