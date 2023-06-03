@@ -2,11 +2,24 @@ import { Get, Injectable, Render } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { categoryDataDto } from './dto/category.dto';
 import { identity } from 'rxjs';
+import { log } from 'console';
 
 @Injectable()
 export class CategoryService {
   constructor(private prisma: PrismaService) {}
 
+  async search(name) {
+    let result = await this.prisma.category.findMany({
+      where: {
+        name: {
+          contains: `%${name}%`,
+        },
+      },
+    });
+    // console.log(result);
+
+    return result;
+  }
   async createCategory(postData) {
     return this.prisma.category.create({
       data: {
@@ -57,7 +70,6 @@ export class CategoryService {
         updated_at: new Date(),
       },
     });
-    console.log(result);
     return result;
   }
 

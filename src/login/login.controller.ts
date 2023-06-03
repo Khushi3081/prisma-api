@@ -29,24 +29,13 @@ export class LoginController {
   constructor(
     private readonly loginService: LoginService,
     private jwtService: JwtService,
-    private AuthService:AuthService
+    private authService: AuthService,
   ) {}
 
   @Get()
   @Render('login')
   root() {}
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleRegister() {}
-  
-  @Get('google/callback')
-  @Redirect('/dashboard')
-  @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req) {
-    return this.AuthService.googleRegister(req);
-  }
-  
   @Post('auth')
   @ApiOkResponse({ type: AuthEntity })
   async login(

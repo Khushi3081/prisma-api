@@ -16,6 +16,10 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { OrderModule } from './order/order.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { AuthService } from './auth/auth.service';
+import { PrismaService } from './prisma.service';
+import { GoogleStrategy } from './auth/google.strategy';
+import { LoginService } from './login/login.service';
 
 @Module({
   imports: [
@@ -33,15 +37,22 @@ import { MailerModule } from '@nestjs-modules/mailer';
     JwtModule,
     MailerModule.forRoot({
       transport: {
-        host: "smtp.gmail.com",
+        host: 'smtp.gmail.com',
         auth: {
-          user: "rachchh.khushi30@gmail.com",
-          pass: "lfmoqlbpeofvzpmx",
+          user: 'rachchh.khushi30@gmail.com',
+          pass: 'lfmoqlbpeofvzpmx',
         },
       },
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, JwtService],
+  providers: [
+    AppService,
+    JwtService,
+    GoogleStrategy,
+    AuthService,
+    LoginService,
+    PrismaService,
+  ],
 })
 export class AppModule {}

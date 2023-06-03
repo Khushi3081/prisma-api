@@ -20,12 +20,10 @@ export class ForgotPasswordService {
     const user = await this.prisma.user.findFirst({
       where: { email: String(email) },
     });
-    console.log(user);
     if (!user) {
       throw new Error('Email does not exists..');
     }
     let resetLink = crypto.randomBytes(64).toString('hex');
-    console.log(request);
 
     await this.prisma.forgotPassword.upsert({
       where: {
@@ -41,7 +39,7 @@ export class ForgotPasswordService {
         user_id: user.id,
       },
     });
-    let link = `http://localhost:5000/forgot-password/reset-password/?token=${resetLink}&id=${user.id}`;
+    let link = `/forgot-password/reset-password/?token=${resetLink}&id=${user.id}`;
     this.mailerService.sendMail({
       to: 'rachchh.khushi30@gmail.com',
       from: 'rachchh.khushi30@gmail.com',
@@ -55,25 +53,25 @@ export class ForgotPasswordService {
 
   async update(postData, query, res: Response) {
     let findUserdata = await this.prisma.forgotPassword.findFirst({
-      where:{
-        id:query.id,
-      }
-    })
+      where: {
+        id: query.id,
+      },
+    });
     let savedToken = findUserdata.token;
-    if(savedToken != query.token){
-     throw new Error('token is not valid');
-  }
-  const hashPass = await bcrypt.hash(postData.password, saltRounds);
-  const addUpdate = await this.prisma.user.update({
-    where:{
-      id:findUserdata.user_id
-    },
-    data:{
-      password:hashPass
+    if (savedToken != query.token) {
+      throw new Error('token is not valid');
     }
-  })
-  res.redirect('/login');
-}
+    const hashPass = await bcrypt.hash(postData.password, saltRounds);
+    const addUpdate = await this.prisma.user.update({
+      where: {
+        id: findUserdata.user_id,
+      },
+      data: {
+        password: hashPass,
+      },
+    });
+    res.redirect('/login');
+  }
 
   remove(id: number) {
     return `This action removes a #${id} forgotPassword`;

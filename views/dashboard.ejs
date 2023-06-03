@@ -81,16 +81,17 @@
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
+                id="productName"
               />
-              <button class="btn btn-outline-success" type="submit">
-                Search
-              </button>
+              <input type="button" id="productName" class="btn btn-outline-success" value="Search" onclick="searchData()" />
             </form>
           </div>
         </div>
       </nav>
     </br>
-    <div class="row">
+    <div class="row" id="show"></div>
+
+    <div class="row" id="hide">
       <% data.forEach(e => {%>
       <div class="col-sm-3" >
         <div class="card" style="width: 18rem;border: 1px solid black;">
@@ -107,11 +108,52 @@
       </div>
         <%})%>
     </div>
+    
   </body>
   <script>
+    async function searchData(){
+      let data = document.getElementById("productName").value;
+      let qry_str = await fetch(`/dashboard/search/?pName=${data}`);
+      let result = await qry_str.json();
+      if(result[0]){
+
+        let showData = document.getElementById("hide");
+        showData.style.display = "none";
+        let htmlContent = ""
+        htmlContent += `<div class="col-sm-3" >`
+         for(let i=0;i<result.length;i++){
+          htmlContent +=`<div class="card" style="width: 18rem;border: 1px solid black;">
+          <img style="width: 17rem; height:16rem" class="card-img-top" src="${result[i].image_path.slice(7)}" alt="Card image cap" />
+          <div class="card-body">
+            <div><input type="text" id="${ result[0].id}" value="${result[i].id}" hidden></div>
+            <div style="flex-direction: row; display: flex; justify-content: space-between;">
+              <h5 id= "name" class="card-title">${result[i].name}</h5>
+              <p class="card-text">Rs.${result[i].price}</p>
+              </div>     
+              </div>
+        </div>
+        </div>
+        }
+        `}
+        document.getElementById("show").innerHTML = htmlContent;
+      }
+      else{
+        let showData = document.getElementById("hide");
+        showData.style.display = "none";
+        let htmlContent = `
+      <div class="col-sm-3" >
+        <h4>Data not found</h4>
+        </div>`
+        document.getElementById("show").innerHTML = htmlContent;
+
+      }
+    }
+
+
+
     async function addProduct(id) {
       let ids = document.getElementById(id).value;
-      let qry_str =await  fetch(`/cart/addCart`,{
+      let qry_str =await fetch(`/cart/addCart`,{
         method:"post",
         headers:{
           "Content-Type":"application/json"
@@ -120,6 +162,7 @@
           id
         })
       })
+
     }
   </script>
 </html>

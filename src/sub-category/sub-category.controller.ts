@@ -8,6 +8,7 @@ import {
   Delete,
   Render,
   Redirect,
+  Query,
 } from '@nestjs/common';
 import { SubCategoryService } from './sub-category.service';
 import { CreateSubCategoryDto } from './dto/create-sub-category.dto';
@@ -27,13 +28,18 @@ export class SubCategoryController {
     return await this.subCategoryService.findAll();
   }
 
+  @Get('search')
+  async search(@Query('name') name: string) {
+    return this.subCategoryService.search(name);
+  }
+
   @Post('')
   @Redirect('sub-category/sub-list/1')
   async create(@Body() postData: CreateSubCategoryDto) {
     return this.subCategoryService.createSubCategory(postData);
   }
 
-  @Get('sub-list/:id')
+  @Get('/sub-list/:id')
   @Render('sub-category-list')
   async list(@Param('id') id: number) {
     let data = await this.subCategoryService.showlist(+id);

@@ -78,7 +78,6 @@ export class LoginService {
     }
   }
   async genrateCookie(access_token, req, res) {
-    console.log('----------', access_token);
 
     res.cookie('access_token', access_token, {
       expires: new Date(new Date().getTime() + 30 * 1000),

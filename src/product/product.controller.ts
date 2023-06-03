@@ -10,6 +10,7 @@ import {
   Redirect,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -27,6 +28,12 @@ export class ProductController {
     const category = await this.productService.categoryfindAll();
     return { category };
   }
+
+  @Get('search')
+  async search(@Query('name') name: string) {
+    return this.productService.search(name);
+  }
+
   @Post()
   @Redirect('product/product-list/1')
   @UseInterceptors(FileInterceptor('productimage', { dest: './assets' }))

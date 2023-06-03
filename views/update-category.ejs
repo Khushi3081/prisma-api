@@ -77,7 +77,6 @@
     async function validate() {
       let id = document.getElementById('c_id').value;
       let name = document.getElementById('formGroupExampleInput').value;
-      console.log(id);
       let qry_str = await fetch(`/category/update/${id}`, {
         method: 'PATCH',
         headers: {

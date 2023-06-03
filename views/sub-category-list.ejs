@@ -37,6 +37,10 @@
     <div class="card">
         <div class="card-header">Sub-category data</div>
         <div class="card-body">
+          <input type="search" placeholder="Search" aria-label="Search" id="subCategoryName" onkeyup="searchData()"/>
+          <div id="show"></div>
+        
+        <div id="hide">
           <div class="table-responsive">
             <table id="myTable">
               <thead>
@@ -46,7 +50,6 @@
                   <td>Category-name</td>
                 </tr>
             </thead>
-            <% console.log(data) %>
             <tbody>
                 <%data.subcategories.forEach((element)=>{%>
                 <tr>
@@ -75,6 +78,47 @@
   </html>
   </body>
   <script>
+  
+  async function searchData() {
+    let data = document.getElementById("subCategoryName").value;
+    let qry_str = await fetch(`/sub-category/search/?name=${data}`);
+    let result = await qry_str.json();
+    if (result[0]) {
+
+      let showData = document.getElementById("hide");
+      showData.style.display = "none";
+      let htmlContent = ""
+       htmlContent += `<table id="myTable">
+                      <thead>
+                       <tr>
+                          <td>Id</td>
+                          <td>Sub-category-Name</td>
+                          <td>Category-name</td>
+                        </tr>
+                      </thead>
+                      <tbody>`
+                        for(let i=0;i<result.length;i++){
+                            htmlContent +=`<tr>
+                                <td>${result[i].id}</td>
+                                <td>${result[i].name}</td>
+                                <td>${result[i].candidate.name}</td>`
+                            }
+          htmlContent += `</tbody>
+                      </table>`
+        document.getElementById("show").innerHTML = htmlContent;
+    }
+    else {
+      let showData = document.getElementById("hide");
+      showData.style.display = "none";
+      let htmlContent = `
+      <div class="col-sm-3" >
+        <h4>Data not found</h4>
+        </div>`
+      document.getElementById("show").innerHTML = htmlContent;
+
+    }
+  }
+
     async function deleteData(id) {
       if(confirm("Are you sure you want to delete the data?") == true ){
         let qry_str = await fetch(`/sub-category/delete/${id}`,{

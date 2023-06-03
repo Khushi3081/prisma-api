@@ -47,7 +47,6 @@
 
               <% category.forEach(d => { %>
                 <% d.subCats.forEach(s => { %>
-                  <% console.log(s) %>
                     <option value="<%=s.id%>"<% if(s.name == data[0].subCategory.name) {%> Selected <% } %> ><%=s.name%></option>
                   <% });%>
                 <% });%>

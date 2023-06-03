@@ -90,11 +90,9 @@
       // console.log(category_id);
       const qry_string = await fetch(`/product/sub/${category_id}`);
       const answer = await qry_string.json()
-      console.log(answer);
       updateSubCategory(answer)
     }
     async function updateSubCategory(answer){
-      console.log(answer);
       const sc_dropdown = document.getElementById("subcategory");
       sc_dropdown.innerHTML = "";
 

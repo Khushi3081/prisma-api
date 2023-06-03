@@ -59,6 +59,42 @@ export class ProductService {
       },
     });
   }
+
+  async search(name: string) {
+    let result = await this.prisma.product.findMany({
+      include: {
+        subCategory: {
+          include: {
+            candidate: true,
+          },
+        },
+      },
+      where: {
+        OR: [
+          {
+            name: {
+              contains: `%${name}%`,
+            },
+          },
+          {
+            subCategory: {
+              name: {
+                contains: `%${name}%`,
+              },
+            },
+          },
+          {
+            subCategory: {
+              candidate: {
+                name: `%${name}%`,
+              },
+            },
+          },
+        ],
+      },
+    });
+    return result;
+  }
   async findSub(id: number) {
     let data = await this.prisma.subCategory.findMany({
       where: {

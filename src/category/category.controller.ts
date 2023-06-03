@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Redirect,
   Render,
 } from '@nestjs/common';
@@ -19,10 +20,14 @@ export class CategoryController {
   @Render('category')
   root() {}
 
+  @Get('search')
+  async search(@Query('name') name: string) {
+    return this.categoryService.search(name);
+  }
   @Post('')
   @Redirect('category/category-list/1')
   async createCategory(@Body() postData: categoryDataDto) {
-    return this.categoryService.createCategory(postData);
+    return await this.categoryService.createCategory(postData);
   }
 
   @Get('category-list/:id')
@@ -36,7 +41,6 @@ export class CategoryController {
   @Render('update-category')
   async findOne(@Param('id') id: string) {
     let data = await this.categoryService.findOne(+id);
-    // console.log(data);
 
     return { data: data };
   }

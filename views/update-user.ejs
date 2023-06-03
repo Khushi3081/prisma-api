@@ -80,7 +80,6 @@
       let name = document.getElementById('uname').value;
       let email = document.getElementById('email').value;
       let role_name = document.getElementById('role').value;
-      console.log(name,email,role_name);
       let qry_str = await fetch(`/user/update/${id}`, {
         method: 'PATCH',
         headers: {

@@ -23,6 +23,35 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
+  async search(name: string) {
+    let data = await this.prisma.user.findMany({
+      include: {
+        candidate: true,
+      },
+      where: {
+        OR: [
+          {
+            name: {
+              contains: `%${name}%`,
+            },
+          },
+          {
+            email: {
+              contains: `%${name}%`,
+            },
+          },
+          {
+            candidate: {
+              name: {
+                contains: `%${name}%`,
+              },
+            },
+          },
+        ],
+      },
+    });
+    return data;
+  }
   async createUser(postData): Promise<user> {
     const hashPass = await bcrypt.hash(postData.password, saltRounds);
     postData.password = hashPass;

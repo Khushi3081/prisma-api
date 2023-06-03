@@ -11,6 +11,27 @@ export class DashboardService {
     return 'This action adds a new dashboard';
   }
 
+  async search(pName: string) {
+
+    let result = await this.prisma.product.findMany({
+      where: {
+        OR: [
+          {
+            name: {
+              contains: pName,
+            },
+          },
+          {
+            price: {
+              contains: pName,
+            },
+          },
+        ],
+      },
+    });
+
+    return result;
+  }
   async findAll() {
     let data = await this.prisma.product.findMany();
     return { data };

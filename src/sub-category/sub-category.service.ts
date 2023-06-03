@@ -46,6 +46,32 @@ export class SubCategoryService {
 
     return { subcategories, total_table };
   }
+
+  async search(name) {
+    let result = await this.prisma.subCategory.findMany({
+      include: {
+        candidate: true,
+      },
+      where: {
+        OR: [
+          {
+            name: {
+              contains: `%${name}%`,
+            },
+          },
+          {
+            candidate: {
+              name: {
+                contains: `%${name}%`,
+              },
+            },
+          },
+        ],
+      },
+    });
+    return result;
+  }
+
   async findOne(id: number) {
     let data = await this.prisma.subCategory.findMany({
       where: {

@@ -44,7 +44,7 @@
             <a href="/forgot-password">Click Here</a>
           </div> 
           <div>
-            <a href="/login/google">Log-in with google</a>
+            <a href="/google" >Log-in with google</a>
           </div>
           <div id="error"></div>
           <div class="col-12">
@@ -66,7 +66,6 @@
         })
       });
       response =await qry_req.json();
-      console.log(response.data,"*********");
       if(response.status ==401) {
         document.getElementById("error").innerHTML = "Incorrect Credentials"  
       }

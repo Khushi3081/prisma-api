@@ -5,10 +5,12 @@ import { PrismaService } from 'src/prisma.service';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from 'src/login/constants';
 const saltRounds = 10;
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private jwtService: JwtService) {}
 
   async createUser(postData: userDataDto) {
     const hashPass = await bcrypt.hash(postData.password, saltRounds);
@@ -26,10 +28,11 @@ export class AuthService {
 
   async googleRegister(req) {
     try {
-      console.log(req.user);
+      // console.log(req.user);
       let fname = req.user.name.familyName;
       let lname = req.user.name.givenName;
       let name = fname + lname;
+
       if (!req.user) {
         return `no user from Google`;
       } else {
@@ -41,12 +44,24 @@ export class AuthService {
           create: {
             name: name,
             email: req.user.emails[0].value,
-            password: '0',
+            password: '',
             google_provider_id: req.user.id,
             register_type: req.user.provider,
             role_id: 2,
           },
         });
+        // const payload = {
+        //   id: req.user.id,
+        //   email: req.user.emails[0].value,
+        // };
+        // let token = await this.jwtService.sign(payload, {
+        //   expiresIn: '30d',
+        //   algorithm: 'HS256',
+        //   secret: jwtConstants.secret,
+        // });
+        // console.log(token);
+
+        // return { data, token };
       }
     } catch (error) {
       console.log(error);

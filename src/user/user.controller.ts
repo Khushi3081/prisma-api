@@ -7,20 +7,28 @@ import {
   Render,
   Patch,
   Redirect,
+  Res,
+  Req,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { user } from '@prisma/client';
 import userDataDto from './dto/user.dto';
 import UpdateUserDto from './dto/update-user.dto';
 import adminUserDataDto from './dto/admin-user.dto';
+import { Request, Response } from 'express';
 @Controller('user')
 export class UserController {
   constructor(private readonly UserService: UserService) {}
 
   @Get()
   @Render('admin-user')
-  root() {}
+  async root() {}
 
+  @Get('search')
+  async search(@Query('name') name: string) {
+    return await this.UserService.search(name);
+  }
   @Post()
   @Redirect('/user/user-list/:id')
   async addUser(@Body() postData: adminUserDataDto) {

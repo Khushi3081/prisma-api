@@ -17,11 +17,15 @@ export class loginGuard implements CanActivate {
     const response = context.switchToHttp().getResponse();
 
     if (
+      request.route.path == '/google' ||
+      request.route.path == '/google/callback' ||
       request.route.path == '/login' ||
       request.route.path == '/login/auth' ||
+      request.route.path == '/login/google' ||
       request.route.path == '/dashboard' ||
       request.route.path == '/auth' ||
-      request.route.path == '/forgot-password'
+      request.route.path == '/forgot-password' ||
+      request.route.path == '/dashboard/logout'
     ) {
       return true;
     }
@@ -53,6 +57,7 @@ export class loginGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       });
+      // console.log(payload);
 
       if (
         array.includes(request.route.path) &&
