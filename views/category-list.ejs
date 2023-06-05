@@ -34,6 +34,20 @@
       background-color: blueviolet;
       text-decoration: none;
     }
+    .edit-style {
+    display: block;
+    width: 80px;
+    height: 35px;
+    background: #4E9CAF;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
+    text-decoration: none;
+    }
+
   </style>
 
 
@@ -60,8 +74,8 @@
                 <tr>
                   <td><%-element.id%></td>
                   <td><%-element.name%></td>
-                  <td><a href="/category/data/<%-element.id%>">Edit</a></td>
-                  <td><input type="button" onclick="deleteData('<%= element.id %>')" value="Delete"></td>
+                  <td><a class="edit-style" href="/category/data/<%-element.id%>">Edit</a></td>
+                  <td><input class="edit-style" type="button" onclick="deleteData('<%= element.id %>')" value="Delete"></td>
                 </tr>
                 <%})%>
           </tbody>

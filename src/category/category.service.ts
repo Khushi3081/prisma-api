@@ -21,6 +21,7 @@ export class CategoryService {
     return result;
   }
   async createCategory(postData) {
+
     return this.prisma.category.create({
       data: {
         name: postData.category,

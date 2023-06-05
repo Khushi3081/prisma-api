@@ -12,6 +12,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   </head>
   <style>
+    .container {
+      width: 1440px;
+      margin: auto;
+    }
     .button {
       margin: 2.5rem;
       display: block;
@@ -26,42 +30,47 @@
       line-height: 25px;
       text-decoration: none;
     }
-    .card {
+    .card-r {
       display: flex;
       flex-wrap: wrap;
       width: 100%;
     }
     .views {
-      width: 33%;
+      width: 25%;
     }
   </style>
   <body>
-    <div class="card">
-      <div class="views">
-        <a href="/user" class="button">User</a>
-      </div>
-      <div class="views">
-        <a href="/category" class="button">Category</a>
-      </div>
-      <div class="views">
-        <a href="/sub-category" class="button">Sub-Category</a>
-      </div>
-      <div class="views">
-        <a href="/product" class="button">Product</a>
-      </div>
-      <div class="views">
-        <a href="/user/user-list/:id" class="button">User-List</a>
-      </div>
-      <div class="views">
-        <a href="/category/category-list/:id" class="button">Category-List</a>
-      </div>
-      <div class="views">
-        <a href="/sub-category/sub-list/:id" class="button"
-          >Sub-Category-List</a
-        >
-      </div>
-      <div class="views">
-        <a href="/product/Product-List/:id" class="button">Product-List</a>
+    <div class="container">
+      <div class="card-r">
+        <div class="views">
+          <a href="/user" class="button">User</a>
+        </div>
+        <div class="views">
+          <a href="/category" class="button">Category</a>
+        </div>
+        <div class="views">
+          <a href="/sub-category" class="button">Sub-Category</a>
+        </div>
+        <div class="views">
+          <a href="/product" class="button">Product</a>
+        </div>
+        <div class="views">
+          <a href="/user/user-list/:id" class="button">User-List</a>
+        </div>
+        <div class="views">
+          <a href="/category/category-list/:id" class="button">Category-List</a>
+        </div>
+        <div class="views">
+          <a href="/sub-category/sub-list/:id" class="button"
+            >Sub-Category-List</a
+          >
+        </div>
+        <div class="views">
+          <a href="/product/Product-List/:id" class="button">Product-List</a>
+        </div>
+        <div class="views">
+          <a href="/dashboard/logout" class="button">Logout</a>
+        </div>
       </div>
     </div>
     <script

@@ -20,6 +20,7 @@ import { AuthService } from './auth/auth.service';
 import { PrismaService } from './prisma.service';
 import { GoogleStrategy } from './auth/google.strategy';
 import { LoginService } from './login/login.service';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [

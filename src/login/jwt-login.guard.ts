@@ -15,6 +15,7 @@ export class loginGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
+    // console.log(request);
 
     if (
       request.route.path == '/google' ||
@@ -50,14 +51,14 @@ export class loginGuard implements CanActivate {
     ];
     const user = ['/dashboard', '/cart/cart-list/:id', '/cart/cart-list/2'];
     const token = request.headers.cookie?.split(';')[0].split('=')[1];
-    if (!token) {
+    const g_token = request.headers.cookie?.split(';')[1]?.split('=')[1];
+    if (!token || !g_token) {
       response.redirect('/login');
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       });
-      // console.log(payload);
 
       if (
         array.includes(request.route.path) &&
@@ -65,12 +66,42 @@ export class loginGuard implements CanActivate {
       ) {
         response.redirect('/dashboard');
       }
+
       if (user.includes(request.route.path) && payload.role == 1) {
         response.redirect('/admin');
       }
     } catch {
       throw new UnauthorizedException();
     }
+    return true;
+  }
+}
+export class googleGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const response = context.switchToHttp().getResponse();
+    // console.log(request.headers.cookie?.split(';')[1]?.split('=')[1]);
+
+    if (
+      request.route.path == '/google' ||
+      request.route.path == '/google/callback' ||
+      request.route.path == '/login' ||
+      request.route.path == '/login/auth' ||
+      request.route.path == '/login/google' ||
+      request.route.path == '/dashboard' ||
+      request.route.path == '/auth' ||
+      request.route.path == '/forgot-password' ||
+      request.route.path == '/dashboard/logout'
+    ) {
+      return true;
+    }
+
+    let token = request.headers.cookie?.split(';')[1]?.split('=')[1];
+    if (!token) {
+      response.redirect('/login');
+    }
+
     return true;
   }
 }

@@ -4,7 +4,7 @@ import { CartService } from './cart.service';
 import { PrismaService } from 'src/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
-import { loginGuard } from 'src/login/jwt-login.guard';
+import { googleGuard, loginGuard } from 'src/login/jwt-login.guard';
 
 @Module({
   controllers: [CartController],
@@ -14,7 +14,7 @@ import { loginGuard } from 'src/login/jwt-login.guard';
     JwtService,
     {
       provide: APP_GUARD,
-      useClass: loginGuard,
+      useClass: googleGuard,
     },
   ],
 })

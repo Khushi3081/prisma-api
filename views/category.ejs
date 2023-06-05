@@ -10,6 +10,8 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
   </head>
   <style>
     .container {
@@ -27,7 +29,7 @@
   </style>
   <body>
     <div class="container">
-      <form action="/category" method="post">
+      <form>
         <div class="mb-3">
           <label for="formGroupExampleInput" class="form-label"
             >Add Category</label
@@ -36,12 +38,17 @@
             type="text"
             name="category"
             class="form-control"
-            id="formGroupExampleInput"
+            id="category"
             placeholder="Category Name"
           />
         </div>
         <div>
-          <input type="submit" class="btn btn-primary" value="Submit" />
+          <input
+            type="button"
+            class="btn btn-primary"
+            value="Submit"
+            onclick="addCategory()"
+          />
         </div>
       </form>
     </div>
@@ -56,4 +63,29 @@
     integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
     crossorigin="anonymous"
   ></script>
+  <script>
+    async function addCategory() {
+      let category = document.getElementById('category').value;
+      let qry_req = await fetch(`/category`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/JSON',
+        },
+        body: JSON.stringify({
+          category: category,
+        }),
+      });
+      let response = await qry_req.json();
+      if (response) {
+        swal({
+          text: 'Category added!',
+          type: 'success',
+        }).then((okay) => {
+          if (okay) {
+            window.location.href = '/category/category-list/1';
+          }
+        });
+      }
+    }
+  </script>
 </html>

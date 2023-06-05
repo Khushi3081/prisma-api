@@ -36,7 +36,7 @@ export class AuthService {
       if (!req.user) {
         return `no user from Google`;
       } else {
-        return await this.prisma.user.upsert({
+        let data = await this.prisma.user.upsert({
           where: {
             email: req.user.emails[0].value,
           },
@@ -50,18 +50,18 @@ export class AuthService {
             role_id: 2,
           },
         });
-        // const payload = {
-        //   id: req.user.id,
-        //   email: req.user.emails[0].value,
-        // };
-        // let token = await this.jwtService.sign(payload, {
-        //   expiresIn: '30d',
-        //   algorithm: 'HS256',
-        //   secret: jwtConstants.secret,
-        // });
+        const payload = {
+          id: req.user.id,
+          email: req.user.emails[0].value,
+        };
+        let token = await this.jwtService.sign(payload, {
+          expiresIn: '30d',
+          algorithm: 'HS256',
+          secret: jwtConstants.secret,
+        });
         // console.log(token);
 
-        // return { data, token };
+        return { data, token };
       }
     } catch (error) {
       console.log(error);

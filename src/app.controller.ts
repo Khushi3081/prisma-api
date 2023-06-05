@@ -26,12 +26,7 @@ export class AppController {
     private jwtService: JwtService,
   ) {}
 
-  // @Get()
-  // getHello(): string {
-  //   return this.appService.getHello();
-  // }
-
-  @Get('/google')
+  @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleRegister() {}
 
@@ -43,21 +38,19 @@ export class AppController {
     @Response()
     res,
   ) {
-    let answer = this.authService.googleRegister(req);
-    let result = await this.loginService.login(req);
-    if (result.access_token) {
-      res.cookie('access_token', result.access_token, { httpOnly: true });
-      const payload: any = await this.jwtService.verifyAsync(
-        result.access_token,
-        {
-          secret: jwtConstants.secret,
-        },
-      );
+    let answer = await this.authService.googleRegister(req);
+
+    if (answer['token']) {
+      res.cookie('access_token', answer['token'], { httpOnly: true });
+      const payload: any = await this.jwtService.verifyAsync(answer['token'], {
+        secret: jwtConstants.secret,
+      });
 
       res.cookie('data', payload, { httpOnly: true });
-      res.status(HttpStatus.OK).json({});
+      // return res.status(HttpStatus.OK).json({
+      //   data: answer,
+      // });
     }
-    return { answer, result };
   }
 
   @Get('admin')

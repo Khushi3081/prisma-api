@@ -6,7 +6,7 @@ export class CreateProductDto {
   image_path: string;
   c_id: number;
   sub_id: number;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
 }

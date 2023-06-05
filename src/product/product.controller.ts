@@ -35,7 +35,7 @@ export class ProductController {
   }
 
   @Post()
-  @Redirect('product/product-list/1')
+  @Redirect('/product/product-list/1')
   @UseInterceptors(FileInterceptor('productimage', { dest: './assets' }))
   create(
     @Body() postData: CreateProductDto,

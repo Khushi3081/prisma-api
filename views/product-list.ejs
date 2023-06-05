@@ -37,6 +37,19 @@
       height: 50px;
       width: 90px;
     }
+    .edit-style {
+    display: block;
+    width: 80px;
+    height: 35px;
+    background: #4E9CAF;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
+    text-decoration: none;
+    }
   </style>
 </head>
 
@@ -71,8 +84,8 @@
                 <td><%-e.price%></td>
                 <td><%-e.quantity%></td>
                 <td><img class="img-style" src="/<%=e.image_path.slice(7)%>"></td>
-                <td><a href="/product/<%-e.id%>">Edit</a></td>
-                <td><input type="button" onclick="deleteData('<%= e.id %>')"value="Delete" ></td>
+                <td><a class="edit-style" href="/product/<%-e.id%>">Edit</a></td>
+                <td><input class="edit-style" type="button" onclick="deleteData('<%= e.id %>')"value="Delete" ></td>
 
               </tr>
                   <%})%>

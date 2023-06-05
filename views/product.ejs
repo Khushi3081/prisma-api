@@ -10,6 +10,9 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
   </head>
   <style>
     .container {
@@ -19,7 +22,7 @@
   </style>
   <body>
     <div class="container">
-      <form action="/product" method="post" enctype="multipart/form-data">
+      <form action='/product' method="POST" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="formGroupExampleInput" class="form-label"
             >Add Product</label
@@ -42,33 +45,33 @@
             type="text"
             class="form-control",
             name = "productname"
-            id="formGroupExampleInput"
+            id="productname"
             placeholder="Product Name"
           /><br>
           <input
             type="text"
             class="form-control",
             name = "productprice"
-            id="formGroupExampleInput"
+            id="productprice"
             placeholder="Product Price"
           /><br>
           <input
             type="text"
             class="form-control",
             name = "productquntity"
-            id="formGroupExampleInput"
+            id="productquntity"
             placeholder="Product Quantity"
           /><br>
           <input
           type="file"
           class="form-control",
           name = "productimage"
-          id="formGroupExampleInput"
+          id="productimage"
           placeholder="Product Image"
         />
           </div>
         </div>
-        <input type="submit" class="btn btn-primary" value="Submit" />
+        <input type="submit" class="btn btn-primary" value="Submit"/>
       </form>
     </div>
   </body>
@@ -87,7 +90,6 @@
   <script>
     async function addSubCategory() {
       const category_id = document.getElementById("category").value;
-      // console.log(category_id);
       const qry_string = await fetch(`/product/sub/${category_id}`);
       const answer = await qry_string.json()
       updateSubCategory(answer)
@@ -103,5 +105,40 @@
         sc_dropdown.appendChild(option);
       }
     }
+
+    // async function addProduct() {
+    //   let category = document.getElementById('category').value;
+    //   let subcategory = document.getElementById('subcategory').value;
+    //   let name = document.getElementById('productname').value;
+    //   let Price = document.getElementById('productprice').value;
+    //   let quantity = document.getElementById('productquntity').value;
+    //   let image = document.getElementById('productimage').value;
+    //  let i = image.split("\\")[2];
+    //   let qry_req = await fetch(`/product`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-type': 'application/JSON',
+    //     },
+    //     body: JSON.stringify({
+    //       c_id: category,
+    //       sub_id:subcategory,
+    //       productname:name,
+    //       productprice:Price,
+    //       productquantity:quantity,
+    //       productimage:i
+    //     }),
+    //   });
+    //   let response = await qry_req.json();
+    //   if (response) {
+    //     swal({
+    //       text: 'Product added!',
+    //       type: 'success',
+    //     }).then((okay) => {
+    //       if (okay) {
+    //         window.location.href = 'product/product-list/1';
+    //       }
+    //     });
+    //   }
+    // }
   </script>
 </html>

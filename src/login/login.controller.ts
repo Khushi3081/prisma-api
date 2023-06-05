@@ -45,6 +45,7 @@ export class LoginController {
     @Body() postData: loginDataDto,
   ): Promise<any> {
     let result = await this.loginService.login(postData);
+
     if (result.access_token) {
       res.cookie('access_token', result.access_token, { httpOnly: true });
       const payload: any = await this.jwtService.verifyAsync(
@@ -57,7 +58,7 @@ export class LoginController {
       res.cookie('data', payload, { httpOnly: true });
       return res.status(HttpStatus.OK).json({
         status: HttpStatus.OK,
-        data: result,
+      data: result,
         message: `Login Successfull`,
       });
     } else {

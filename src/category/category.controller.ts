@@ -25,8 +25,8 @@ export class CategoryController {
     return this.categoryService.search(name);
   }
   @Post('')
-  @Redirect('category/category-list/1')
   async createCategory(@Body() postData: categoryDataDto) {
+
     return await this.categoryService.createCategory(postData);
   }
 
