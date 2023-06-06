@@ -13,23 +13,6 @@ model role {
   users user[]
 }
 
-model user {
-  id                 Int            @id @default(autoincrement())
-  name               String
-  email              String @unique
-  password           String?
-  role_id            Int?           @default(2)
-  created_at         DateTime       @default(now())
-  deleted_at         DateTime?
-  updated_at         DateTime?
-  google_provider_id String?
-  register_type      register_type?
-  carts              cart[]
-  candidate          role?          @relation(fields: [role_id], references: [id])
-  forgotpassword forgotPassword?
-
-  @@index([role_id], map: "user_role_id_fkey")
-}
 
 model category {
   id         Int           @id @default(autoincrement())
@@ -69,7 +52,7 @@ model product {
   updated_at  DateTime?
   image_name  String
   image_path  String
-  carts       cart[]
+  cart_product       cart_product[]
   category    category?    @relation(fields: [c_id], references: [id])
   subCategory subCategory? @relation(fields: [sub_id], references: [id])
 
@@ -78,30 +61,61 @@ model product {
   @@map("product")
 }
 
+model user {
+  id                 Int            @id @default(autoincrement())
+  name               String
+  email              String @unique
+  password           String?
+  role_id            Int?           @default(2)
+  created_at         DateTime       @default(now())
+  deleted_at         DateTime?
+  updated_at         DateTime?
+  google_provider_id String?
+  register_type      register_type?
+  carts              cart[]
+  orders  order[]
+  candidate          role?          @relation(fields: [role_id], references: [id])
+  forgotpassword forgotPassword?
+
+  @@index([role_id], map: "user_role_id_fkey")
+}
+model cart_product{
+  id  Int @id @default(autoincrement())
+  p_id  Int
+  p_quantuty  Int
+  cart_id Int
+  product    product   @relation(fields: [p_id], references: [id])
+  cart      cart      @relation(fields: [cart_id], references: [id])
+  @@index([p_id], map: "cart_p_id_fkey")
+  @@index([cart_id], map: "cart_cart_id_fkey")
+
+
+}
 model cart {
   id         Int       @id @default(autoincrement())
-  p_id       Int       @unique
-  p_quantity Int       @default(1)
   user_id    Int
   created_at DateTime  @default(now())
   updated_at DateTime?
   deleted_at DateTime?
-  product    product   @relation(fields: [p_id], references: [id])
   user       user      @relation(fields: [user_id], references: [id])
   orders order[] 
+  cart_product       cart_product[]
 
-  @@index([p_id], map: "cart_p_id_fkey")
   @@index([user_id], map: "cart_user_id_fkey")
   @@map("cart")
 }
 
 model order {
   id    Int     @id @default(autoincrement())
-  c_id   Int    
+  c_id   Int
+  user_id Int    
   created_at DateTime @default(now())
+
   cart cart @relation(fields: [c_id],references: [id])
+  user user @relation(fields: [user_id],references: [id])
 
   @@index([c_id], map: "order_c_id_fkey")
+  @@index([user_id],map:"order_user_id_fkey")
   @@map("order")
 }
 enum register_type {

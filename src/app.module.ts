@@ -21,6 +21,7 @@ import { PrismaService } from './prisma.service';
 import { GoogleStrategy } from './auth/google.strategy';
 import { LoginService } from './login/login.service';
 import { APP_GUARD } from '@nestjs/core';
+import { MainModule } from './main/main.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { APP_GUARD } from '@nestjs/core';
         },
       },
     }),
+    MainModule,
   ],
   controllers: [AppController],
   providers: [

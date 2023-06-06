@@ -15,11 +15,6 @@ export class loginGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
-    // console.log(request);
-    // console.log(
-    //   '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
-    //   request.cookies,
-    // );
 
     if (
       request.route.path == '/google' ||
@@ -29,8 +24,7 @@ export class loginGuard implements CanActivate {
       request.route.path == '/login/google' ||
       request.route.path == '/dashboard' ||
       request.route.path == '/auth' ||
-      request.route.path == '/forgot-password' ||
-      request.route.path == '/dashboard/logout'
+      request.route.path == '/forgot-password'
     ) {
       return true;
     }
@@ -54,11 +48,8 @@ export class loginGuard implements CanActivate {
       '/product/Product-List/3',
     ];
     const user = ['/dashboard', '/cart/cart-list/:id', '/cart/cart-list/2'];
-    // const token = request.headers.cookie?.split(';')[0].split('=')[1];
-    // const g_token = request.headers.cookie?.split(';')[1]?.split('=')[1];
 
     const token = request.cookies['access_token'];
-    // console.log(token, '++++**');
 
     if (!token) {
       response.redirect('/login');

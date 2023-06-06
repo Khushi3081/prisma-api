@@ -10,8 +10,6 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>  
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
     <style>
       .container {
         width: 1470px;
@@ -49,14 +47,11 @@
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/auth">Registration</a>
+                <a class="nav-link" href="/cart/cart-list/:id">Show cart</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/login">Log-in</a>
+                <a class="nav-link" href="/dashboard/logout">Logout</a>
               </li>
-                
-              </li>
-             
             </ul>
             <form class="d-flex" role="search">
               <input
@@ -135,14 +130,20 @@
 
 
     async function addProduct(id) {
-      swal({
-          text: 'Fisrt login!',
-          type: 'info',
-        }).then((okay) => {
-          if (okay) {
-            window.location.href = '/login';
-          }
-        });
+      let ids = document.getElementById(id).value;
+      console.log(ids);
+      let qry_str =await fetch(`/cart/addCart`,{
+        method:"post",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          ids
+        })
+      })
+      let result = await qry_str.json();
+      ids.disabled = true;
+
     }
   </script>
 </html>

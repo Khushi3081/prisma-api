@@ -6,9 +6,18 @@ import { PrismaService } from 'src/prisma.service';
 export class CartService {
   constructor(private prisma: PrismaService) {}
 
+  //product add and quantity update
   async addProduct(req) {
-    let data = await this.prisma.cart.create({
-      data: {
+    let data = await this.prisma.cart.upsert({
+      where: {
+        p_id: parseInt(req.body.ids),
+      },
+      update: {
+        p_quantity: {
+          increment: 1,
+        },
+      },
+      create: {
         p_id: parseInt(req.body.ids),
         user_id: req.cookies.data.id,
         p_quantity: 1,
@@ -17,6 +26,7 @@ export class CartService {
     return data;
   }
 
+  //quantity update form list
   async update(id, body) {
     let data = await this.prisma.cart.update({
       where: {
@@ -30,8 +40,6 @@ export class CartService {
   }
 
   async showProduct(req) {
-    // console.log(await);
-
     let data = await this.prisma.cart.findMany({
       where: {
         user_id: req.cookies.data.id,
@@ -49,27 +57,22 @@ export class CartService {
   async showUser() {
     return this.prisma.user.findMany({});
   }
+
+  //delete cart whn order is placed
   async removeCart(postData) {
     let data;
     for (const id of postData.cartIds) {
-      data = await this.prisma.cart.update({
+      data = await this.prisma.cart.delete({
         where: {
           id: parseInt(id),
-        },
-        data: {
-          deleted_at: new Date(),
-          p_quantity: 0,
-        },
-        select: {
-          p_id: true,
-          user_id: true,
         },
       });
     }
     return data;
   }
-  async removeProduct(id: number) {
 
+  //delete quantity
+  async removeProduct(id: number) {
     let data = await this.prisma.cart.update({
       where: {
         id: id,

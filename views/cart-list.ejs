@@ -36,7 +36,6 @@
     }
     </style>
 </head>
-<%-console.log(data)%>
     <body>
       <div class="container">
       <div class="card">
@@ -55,7 +54,7 @@
                 <p class="card-text">Total</p>
               </div>  
               <div style="flex-direction: row; display: flex; justify-content: space-between;">
-                <p class="card-text"><input type="number" style="width: 40px" class="<%= data[i].id %>" value="<%=data[i].p_quantity%>" onchange="changeQnt(this)"/></p>
+                <p class="card-text"><input type="number" min="0" style="width: 40px" class="<%= data[i].id %>" value="<%=data[i].p_quantity%>" onchange="changeQnt(this)"/></p>
                 <p class="card-text"><%-data[i].product.price%></p>
                 <p class="card-text"><%-total%></p>
               </div>     
