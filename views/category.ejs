@@ -26,6 +26,9 @@
       background-color: blueviolet;
       text-decoration: none;
     }
+    #error{
+      color: red;
+    }
   </style>
   <body>
     <div class="container">
@@ -42,6 +45,7 @@
             placeholder="Category Name"
           />
         </div>
+        <div id="error"></div>
         <div>
           <input
             type="button"
@@ -66,8 +70,17 @@
   <script>
     async function addCategory() {
       let category = document.getElementById('category').value;
-      let qry_req = await fetch(`/category`, {
-        method: 'POST',
+      if(!category) {
+        swal({
+          text: ' add Category!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        // document.getElementById("error").innerHTML = "please add category!"
+      }
+      else{
+        let qry_req = await fetch(`/category`, {
+          method: 'POST',
         headers: {
           'content-type': 'application/JSON',
         },
@@ -85,6 +98,7 @@
             window.location.href = '/category/category-list/1';
           }
         });
+      }
       }
     }
   </script>

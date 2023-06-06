@@ -14,24 +14,24 @@ import { CartService } from 'src/cart/cart.service';
 
 @Controller('order')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+//   constructor(private readonly orderService: OrderService) {}
 
-  @Post('add-order')
-  create(@Body() postData: createOrderDataDto) {
-    return this.orderService.create(postData);
-  }
+//   @Post('add-order')
+//   create(@Body() postData: createOrderDataDto) {
+//     return this.orderService.create(postData);
+//   }
 
-  @Get()
-  @Render('order')
-  async findAll() {}
+//   @Get()
+//   @Render('order')
+//   async findAll() {}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
-  }
+//   @Get(':id')
+//   findOne(@Param('id') id: string) {
+//     return this.orderService.findOne(+id);
+//   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
-  }
+//   @Delete(':id')
+//   remove(@Param('id') id: string) {
+//     return this.orderService.remove(+id);
+//   }
 }

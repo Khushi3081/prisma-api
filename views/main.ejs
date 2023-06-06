@@ -131,7 +131,6 @@
 
     async function addProduct(id) {
       let ids = document.getElementById(id).value;
-      console.log(ids);
       let qry_str =await fetch(`/cart/addCart`,{
         method:"post",
         headers:{

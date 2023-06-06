@@ -51,7 +51,7 @@ export class SubCategoryController {
     let data1 = await this.subCategoryService.findAll();
     let data = await this.subCategoryService.findOne(+id);
 
-    return { data: data, data1: data1 };
+    return { data, data1 };
   }
 
   @Patch('/update/:id')

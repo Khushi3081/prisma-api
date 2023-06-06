@@ -61,9 +61,25 @@
     async function addSubCategory() {
       let category = document.getElementById('category').value;
       let subcategory = document.getElementById('subcategory').value;
+      if(category == "Select One Category") {
+        swal({
+          text: ' select Category!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+      if(!subcategory) {
+        swal({
+          text: ' add Sub-category!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+      }
+      if(category && subcategory) {
 
-      let qry_req = await fetch(`/sub-category`, {
-        method: 'POST',
+        let qry_req = await fetch(`/sub-category`, {
+          method: 'POST',
         headers: {
           'content-type': 'application/JSON',
         },
@@ -83,6 +99,8 @@
           }
         });
       }
+    }
+    
     }
   </script>
 </html>

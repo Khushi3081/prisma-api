@@ -22,7 +22,7 @@
   </style>
   <body>
     <div class="container">
-      <form action='/product' method="POST" enctype="multipart/form-data">
+      <form action='/product' method="POST" enctype="multipart/form-data" id="productInfo">
         <div class="mb-3">
           <label for="formGroupExampleInput" class="form-label"
             >Add Product</label
@@ -71,7 +71,7 @@
         />
           </div>
         </div>
-        <input type="submit" class="btn btn-primary" value="Submit"/>
+        <input type="button" class="btn btn-primary" value="Submit" onclick="return validation()"/>
       </form>
     </div>
   </body>
@@ -106,39 +106,59 @@
       }
     }
 
-    // async function addProduct() {
-    //   let category = document.getElementById('category').value;
-    //   let subcategory = document.getElementById('subcategory').value;
-    //   let name = document.getElementById('productname').value;
-    //   let Price = document.getElementById('productprice').value;
-    //   let quantity = document.getElementById('productquntity').value;
-    //   let image = document.getElementById('productimage').value;
+    async function validation() {
+      let category = document.getElementById('category').value;
+      let subcategory = document.getElementById('subcategory').value;
+      console.log(subcategory);
+      let name = document.getElementById('productname').value;
+      let Price = document.getElementById('productprice').value;
+      let quantity = document.getElementById('productquntity').value;
+      let image = document.getElementById('productimage').value;
     //  let i = image.split("\\")[2];
-    //   let qry_req = await fetch(`/product`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-type': 'application/JSON',
-    //     },
-    //     body: JSON.stringify({
-    //       c_id: category,
-    //       sub_id:subcategory,
-    //       productname:name,
-    //       productprice:Price,
-    //       productquantity:quantity,
-    //       productimage:i
-    //     }),
-    //   });
-    //   let response = await qry_req.json();
-    //   if (response) {
-    //     swal({
-    //       text: 'Product added!',
-    //       type: 'success',
-    //     }).then((okay) => {
-    //       if (okay) {
-    //         window.location.href = 'product/product-list/1';
-    //       }
-    //     });
-    //   }
-    // }
+    if(category == "Select One Category") {
+        swal({
+          text: ' select Category!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+      if(!name) {
+        swal({
+          text: ' add Product-name!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+      if(!Price) {
+        swal({
+          text: ' add Product-price!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+      if(!quantity) {
+        swal({
+          text: ' add Product-quantity!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+      if(!image) {
+        swal({
+          text: ' add Product-image!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+      if(category && name && Price && quantity && image){
+        document.getElementById("productInfo").submit();
+        return true;
+      }
+    }
   </script>
 </html>
