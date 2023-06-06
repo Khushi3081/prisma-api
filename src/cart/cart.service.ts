@@ -35,7 +35,9 @@ export class CartService {
     let data = await this.prisma.cart.findMany({
       where: {
         user_id: req.cookies.data.id,
-        deleted_at: null,
+        p_quantity: {
+          gt: 0,
+        },
       },
       include: {
         product: true,
@@ -67,9 +69,10 @@ export class CartService {
     return data;
   }
   async removeProduct(id: number) {
+
     let data = await this.prisma.cart.update({
       where: {
-        p_id: id,
+        id: id,
       },
       data: {
         p_quantity: {
