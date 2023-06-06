@@ -93,9 +93,9 @@
 
     <div class="row" id="hide">
       <% data.forEach(e => {%>
-      <div class="col-sm-3" >
+      <div class="col-sm-3" style="margin-bottom: 2rem;" >
         <div class="card" style="width: 18rem;border: 1px solid black;">
-          <img style="width: 17rem; height:16rem" class="card-img-top" src="<%=e.image_path.slice(7)%>" alt="Card image cap" />
+          <img style="width: 17.9rem; height:16rem" class="card-img-top" src="<%=e.image_path.slice(7)%>" alt="Card image cap" />
           <div class="card-body">
           <div><input type="text" id="<%= e.id %>" value="<%= e.id %>" hidden></div>
           <div style="flex-direction: row; display: flex; justify-content: space-between;">
@@ -159,7 +159,7 @@
           "Content-Type":"application/json"
         },
         body:JSON.stringify({
-          id
+          ids
         })
       })
 

@@ -69,7 +69,7 @@ model product {
   updated_at  DateTime?
   image_name  String
   image_path  String
-  carts       cart?
+  carts       cart[]
   category    category?    @relation(fields: [c_id], references: [id])
   subCategory subCategory? @relation(fields: [sub_id], references: [id])
 

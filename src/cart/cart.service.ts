@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { request } from 'express';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -6,28 +7,20 @@ export class CartService {
   constructor(private prisma: PrismaService) {}
 
   async addProduct(req) {
-    return this.prisma.cart.upsert({
-      where: {
-        p_id: parseInt(req.body.id),
-      },
-      update: {
-        p_quantity: {
-          increment: 1,
-        },
-        deleted_at: null,
-      },
-      create: {
-        p_id: Number(req.body.id),
-        user_id: 2,
-        deleted_at: null, 
+    let data = await this.prisma.cart.create({
+      data: {
+        p_id: parseInt(req.body.ids),
+        user_id: req.cookies.data.id,
+        p_quantity: 1,
       },
     });
+    return data;
   }
 
   async update(id, body) {
     let data = await this.prisma.cart.update({
       where: {
-        p_id: id,
+        id: id,
       },
       data: {
         p_quantity: parseInt(body.number),
@@ -36,9 +29,12 @@ export class CartService {
     return data;
   }
 
-  async showProduct() {
+  async showProduct(req) {
+    // console.log(await);
+
     let data = await this.prisma.cart.findMany({
       where: {
+        user_id: req.cookies.data.id,
         deleted_at: null,
       },
       include: {

@@ -77,12 +77,12 @@ export class LoginService {
       console.log(error);
     }
   }
-  async genrateCookie(access_token, req, res) {
+  // async genrateCookie(access_token, req, res) {
 
-    res.cookie('access_token', access_token, {
-      expires: new Date(new Date().getTime() + 30 * 1000),
-      sameSite: 'strict',
-      httpOnly: true,
-    });
-  }
+  //   res.cookie('access_token', access_token, {
+  //     expires: new Date(new Date().getTime() + 30 * 1000),
+  //     sameSite: 'strict',
+  //     httpOnly: true,
+  //   });
+  // }
 }

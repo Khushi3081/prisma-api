@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 import { categoryDataDto } from './dto/category.dto';
 import { identity } from 'rxjs';
 import { log } from 'console';
+import { request } from 'express';
 
 @Injectable()
 export class CategoryService {
@@ -21,14 +22,13 @@ export class CategoryService {
     return result;
   }
   async createCategory(postData) {
-
     return this.prisma.category.create({
       data: {
         name: postData.category,
       },
     });
   }
-  async showlist(id: number) {
+  async showlist(id: number, request) {
     let count = await this.prisma.category.aggregate({
       _count: {
         id: true,

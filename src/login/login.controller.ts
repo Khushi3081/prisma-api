@@ -47,7 +47,7 @@ export class LoginController {
     let result = await this.loginService.login(postData);
 
     if (result.access_token) {
-      res.cookie('access_token', result.access_token, { httpOnly: true });
+      res.cookie('access_token', result.access_token);
       const payload: any = await this.jwtService.verifyAsync(
         result.access_token,
         {
@@ -58,7 +58,7 @@ export class LoginController {
       res.cookie('data', payload, { httpOnly: true });
       return res.status(HttpStatus.OK).json({
         status: HttpStatus.OK,
-      data: result,
+        data: result,
         message: `Login Successfull`,
       });
     } else {
@@ -70,9 +70,4 @@ export class LoginController {
     }
   }
 
-  // @UseGuards(AuthGuard)
-  // @Get('/category')
-  // async getProfile(@Req() req: Request): Promise<any> {
-  //   return req.user;
-  // }
 }

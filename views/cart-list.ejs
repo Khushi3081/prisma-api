@@ -34,16 +34,9 @@
       background-color: blueviolet;
       text-decoration: none;
     }
-    .r{
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-    .c-view{
-      width: 33.33%;
-    }
     </style>
 </head>
+<%-console.log(data)%>
     <body>
       <div class="container">
       <div class="card">
@@ -51,8 +44,8 @@
           <div class="row">
             <%for(let i=0;i<data.length;i++) {%>
               <% let total = data[i].product.price*data[i].p_quantity%>
-          <div class="col-sm-3" >
-            <div class="card" style="width: 18rem;border: 1px solid black;">
+          <div class="col-sm-3" style="margin-bottom: 2 rem;">
+            <div class="card" style="width: 17.9rem;border: 1px solid black;">
               <img style="width: 17rem; height:16rem" class="card-img-top" src="/<%-data[i].product.image_path.slice(7)%>" alt="Card image cap"></img>
               <div class="card-body">
               <h5 id= "name" class="card-title"><%-data[i].product.name%></h5>
@@ -88,7 +81,7 @@
     async function changeQnt(quantity) {
       let number = quantity.value;
       let id = quantity.classList.value;
-    
+    // console.log(number,"number",id,"id");
       let qry_str = await fetch(`/cart/addQnt/${id}`,{
           method:"PATCH",
           headers:{

@@ -31,10 +31,10 @@ export class CartController {
   }
   @Get('cart-list/:id')
   @Render('cart-list')
-  async showProduct() {
-    let data = await this.cartService.showProduct();
-    let user_data = await this.cartService.showUser();
-    return { data, user_data };
+  async showProduct(@Req() req: Request) {
+    let data = await this.cartService.showProduct(req);
+    // let user_data = await this.cartService.showUser();
+    return { data };
   }
   @Patch('remove-cart')
   async removeCart(@Body() postData: updateCartDataDto) {

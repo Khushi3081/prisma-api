@@ -16,6 +16,10 @@ export class loginGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
     // console.log(request);
+    // console.log(
+    //   '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
+    //   request.cookies,
+    // );
 
     if (
       request.route.path == '/google' ||
@@ -50,9 +54,13 @@ export class loginGuard implements CanActivate {
       '/product/Product-List/3',
     ];
     const user = ['/dashboard', '/cart/cart-list/:id', '/cart/cart-list/2'];
-    const token = request.headers.cookie?.split(';')[0].split('=')[1];
-    const g_token = request.headers.cookie?.split(';')[1]?.split('=')[1];
-    if (!token || !g_token) {
+    // const token = request.headers.cookie?.split(';')[0].split('=')[1];
+    // const g_token = request.headers.cookie?.split(';')[1]?.split('=')[1];
+
+    const token = request.cookies['access_token'];
+    // console.log(token, '++++**');
+
+    if (!token) {
       response.redirect('/login');
     }
     try {

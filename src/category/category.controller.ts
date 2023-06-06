@@ -6,12 +6,13 @@ import {
   Patch,
   Post,
   Query,
-  Redirect,
   Render,
+  Req,
 } from '@nestjs/common';
 import { categoryDataDto } from './dto/category.dto';
 import { CategoryService } from './category.service';
 import { updateCategoryDataDto } from './dto/update-category.dto';
+import { request } from 'express';
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -25,15 +26,15 @@ export class CategoryController {
     return this.categoryService.search(name);
   }
   @Post('')
+  // @Redirect('category/category-list/1')
   async createCategory(@Body() postData: categoryDataDto) {
-
     return await this.categoryService.createCategory(postData);
   }
 
   @Get('category-list/:id')
   @Render('category-list')
-  async list(@Param('id') id: number) {
-    let data = await this.categoryService.showlist(+id);
+  async list(@Param('id') id: number, @Req() request: Request) {
+    let data = await this.categoryService.showlist(+id, request);
     return { data: data };
   }
 

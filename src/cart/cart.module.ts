@@ -14,7 +14,7 @@ import { googleGuard, loginGuard } from 'src/login/jwt-login.guard';
     JwtService,
     {
       provide: APP_GUARD,
-      useClass: googleGuard,
+      useClass: loginGuard,
     },
   ],
 })
