@@ -8,6 +8,7 @@ import {
   Delete,
   Render,
   Req,
+  Redirect,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { createOrderDataDto } from './dto/create-order.dto';
@@ -17,22 +18,29 @@ import { CartService } from 'src/cart/cart.service';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  // @Get('')
+  // @Render('order-list')
+  // root(){}
+
   @Post('add-order')
-  create(@Body() postData: createOrderDataDto,@Req() req:Request) {
-    return this.orderService.create(postData,req);
+  create(@Body() postData: createOrderDataDto, @Req() req: Request) {
+    return this.orderService.create(postData, req);
   }
 
-//   @Get()
-//   @Render('order')
-//   async findAll() {}
+  @Get('order-list')
+  @Render('order-list')
+  async findAll(@Req() req: Request) {
+    let data = await this.orderService.findAll(req);
+    return { data };
+  }
 
-//   @Get(':id')
-//   findOne(@Param('id') id: string) {
-//     return this.orderService.findOne(+id);
-//   }
+  //   @Get(':id')
+  //   findOne(@Param('id') id: string) {
+  //     return this.orderService.findOne(+id);
+  //   }
 
-//   @Delete(':id')
-//   remove(@Param('id') id: string) {
-//     return this.orderService.remove(+id);
-//   }
+  //   @Delete(':id')
+  //   remove(@Param('id') id: string) {
+  //     return this.orderService.remove(+id);
+  //   }
 }

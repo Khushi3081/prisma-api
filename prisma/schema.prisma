@@ -81,7 +81,7 @@ model user {
 }
 model cart_product{
   id  Int @id @default(autoincrement())
-  p_id  Int @unique
+  p_id  Int 
   p_quantuty  Int 
   cart_id Int
   product    product   @relation(fields: [p_id], references: [id])

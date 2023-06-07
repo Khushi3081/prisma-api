@@ -135,7 +135,10 @@
         },
         body:JSON.stringify({cart_id})
       });
-    }
+      if(qry_str) {
+        window.location.href = '/order/order-list'
+      }
+      }
   </script>
   </html>
   

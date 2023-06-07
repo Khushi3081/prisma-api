@@ -8,30 +8,68 @@ export class CartService {
 
   //product add and quantity update
   async addProduct(req) {
-    console.log(req.body.ids);
-
     let cartData = await this.prisma.cart.findMany({
       where: {
-        user_id: req.cookies.data.id,
+        AND: [
+          {
+            user_id: req.cookies.data.id,
+          },
+          {
+            status: 'active',
+          },
+        ],
+      },
+      include: {
+        cart_product: {
+          where: {
+            p_id: parseInt(req.body.ids),
+          },
+        },
       },
     });
 
-    let data = await this.prisma.cart_product.upsert({
-      where: {
-        p_id: parseInt(req.body.ids),
-      },
-      update: {
-        p_quantuty: {
-          increment: 1,
+    // let data = await this.prisma.cart_product.upsert({
+    //   where: {
+    //     p_id: parseInt(req.body.ids),
+    //   },
+    //   update: {
+    //     p_quantuty: {
+    //       increment: 1,
+    //     },
+    //   },
+    //   create: {
+    //     p_id: parseInt(req.body.ids),
+    //     cart_id: cartData[0].id,
+    //     p_quantuty: 1,
+    //   },
+    // });
+    if (cartData[0].cart_product[0]) {
+      return await this.prisma.cart_product.updateMany({
+        where: {
+          AND: [
+            {
+              cart_id: cartData[0].id,
+            },
+            {
+              p_id: parseInt(req.body.ids),
+            },
+          ],
         },
-      },
-      create: {
-        p_id: parseInt(req.body.ids),
-        cart_id: cartData[0].id,
-        p_quantuty: 1,
-      },
-    });
-    return data;
+        data: {
+          p_quantuty: {
+            increment: 1,
+          },
+        },
+      });
+    } else {
+      return await this.prisma.cart_product.create({
+        data: {
+          p_id: parseInt(req.body.ids),
+          cart_id: cartData[0].id,
+          p_quantuty: 1,
+        },
+      });
+    }
   }
 
   // quantity update form list
@@ -81,7 +119,7 @@ export class CartService {
   }
 
   // //delete cart whn order is placed
-  async removeCart(postData) {
+  async removeCart(postData, req) {
     let data;
     data = await this.prisma.cart.update({
       where: {
@@ -91,21 +129,45 @@ export class CartService {
         status: 'inActive',
       },
     });
-    return data;
+    let newCart = await this.prisma.cart.create({
+      data: {
+        user_id: req.cookies.data.id,
+        created_at: new Date(),
+        status: 'active',
+      },
+    });
+    return { data, newCart };
   }
 
   // //delete quantity
   async removeProduct(id: number) {
-    let data = await this.prisma.cart_product.update({
+    let product = await this.prisma.cart_product.findMany({
       where: {
         id: id,
       },
-      data: {
-        p_quantuty: {
-          decrement: 1,
-        },
+      select: {
+        p_quantuty: true,
       },
     });
-    return data;
+    if (product[0].p_quantuty > 1) {
+      let data = await this.prisma.cart_product.update({
+        where: {
+          id: id,
+        },
+        data: {
+          p_quantuty: {
+            decrement: 1,
+          },
+        },
+      });
+      return data;
+    } else {
+      let data = await this.prisma.cart_product.delete({
+        where: {
+          id: id,
+        },
+      });
+      return data;
+    }
   }
 }

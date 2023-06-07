@@ -6,25 +6,36 @@ export class OrderService {
   constructor(private prisma: PrismaService) {}
 
   async create(postData, req) {
-    
-      let data = await this.prisma.order.create({
-        data: {
-          c_id: parseInt(postData.cart_id),
-          user_id: req.cookies.data.id,
-        },
-      });
+    let data = await this.prisma.order.create({
+      data: {
+        c_id: parseInt(postData.cart_id),
+        user_id: req.cookies.data.id,
+      },
+    });
     return data;
   }
 
-  // async findAll() {
-  //   let data = await this.prisma.cart.findMany({
-  //     include: {
-  //       product: true,
-  //     },
-  //   });
-  //   // console.log(data);
-  //   return data;
-  // }
+  async findAll(req) {
+    let data = await this.prisma.order.findMany({
+      orderBy: {
+        user_id: 'desc',
+      },
+      take: 1,
+      include: {
+        cart: {
+          include: {
+            cart_product: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        },
+        user: true,
+      },
+    });
+    return data;
+  }
 
   // findOne(id: number) {
   //   return `This action returns a #${id} order`;
