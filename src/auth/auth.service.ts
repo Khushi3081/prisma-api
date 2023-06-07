@@ -15,7 +15,7 @@ export class AuthService {
   async createUser(postData: userDataDto) {
     const hashPass = await bcrypt.hash(postData.password, saltRounds);
     postData.password = hashPass;
-    return this.prisma.user.create({
+    let createUser = await this.prisma.user.create({
       data: {
         name: postData.name,
         email: postData.email,
@@ -24,6 +24,13 @@ export class AuthService {
         register_type: 'Platform',
       },
     });
+    let cart = await this.prisma.cart.create({
+      data: {
+        user_id: createUser.id,
+        created_at: new Date(),
+      },
+    });
+    return { cart, createUser };
   }
 
   async googleRegister(req) {

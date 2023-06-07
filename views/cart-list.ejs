@@ -41,33 +41,44 @@
       <div class="card">
         <div class="card-header">Cart-data</div>    
           <div class="row">
-            <%for(let i=0;i<data.length;i++) {%>
-              <% let total = data[i].product.price*data[i].p_quantity%>
+            <% if(data == null ||  data.cart_product == "") {%>
+              <p>Data not Found</p>
+            <% } else { %>
+             
+            <%for(let i=0;i<data.cart_product.length;i++) {%>
+
+              <% let total = data.cart_product[i].product.price*data.cart_product[i].p_quantuty%>
           <div class="col-sm-3" style="margin-bottom: 2 rem;">
             <div class="card" style="width: 17.9rem;border: 1px solid black;">
-              <img style="width: 17rem; height:16rem" class="card-img-top" src="/<%-data[i].product.image_path.slice(7)%>" alt="Card image cap"></img>
+              <img style="width: 17rem; height:16rem" class="card-img-top" src="/<%-data.cart_product[i].product.image_path.slice(7)%>" alt="Card image cap"></img>
               <div class="card-body">
-              <h5 id= "name" class="card-title"><%-data[i].product.name%></h5>
+              <h5 id= "name" class="card-title"><%-data.cart_product[i].product.name%></h5>
               <div style="flex-direction: row; display: flex; justify-content: space-between;">
                 <p class="card-text">Qnt</p>
                 <p class="card-text">Rs.</p>
                 <p class="card-text">Total</p>
               </div>  
               <div style="flex-direction: row; display: flex; justify-content: space-between;">
-                <p class="card-text"><input type="number" min="0" style="width: 40px" class="<%= data[i].id %>" value="<%=data[i].p_quantity%>" onchange="changeQnt(this)"/></p>
-                <p class="card-text"><%-data[i].product.price%></p>
+                <p class="card-text"><input type="number" min="0" style="width: 40px" class="<%= data.cart_product[i].id %>" value="<%=data.cart_product[i].p_quantuty%>" onchange="changeQnt(this)"/></p>
+                <p class="card-text"><%-data.cart_product[i].product.price%></p>
                 <p class="card-text"><%-total%></p>
               </div>     
-              <input type="button" id="<%= data[i].id %>" class="order" onclick="deleteData('<%= data[i].id %>')"value="Delete" >
+              <input type="button" id="<%= data.cart_product[i].id %>" id="order" onclick="deleteData('<%= data.cart_product[i].id %>')"value="Delete" >
             </div>
           </div>
         </div>
         <%}%>
+        <%}%>
+
       </div>
   </div></br>
+  <% if(data== null || data.cart_product == "") {%>
+  <% } else { %>
   <div>
-    <input type="button" value="Place Order" onclick="addOrder(),removeCart()">
+    <input type="button" value="Place Order" id="<%= data.cart_product[0].cart_id %>" onclick="addOrder('<%= data.cart_product[0].cart_id %>'),removeCart('<%= data.cart_product[0].cart_id %>')">
   </div></br>
+  <%}%>
+
       <div>
         <a class="back-button" href="/admin" >Back to HomePage</a>
       </div>
@@ -80,7 +91,6 @@
     async function changeQnt(quantity) {
       let number = quantity.value;
       let id = quantity.classList.value;
-    // console.log(number,"number",id,"id");
       let qry_str = await fetch(`/cart/addQnt/${id}`,{
           method:"PATCH",
           headers:{
@@ -106,37 +116,24 @@
       }
     }
 
-    async function removeCart() {
-      let ans = document.querySelectorAll('.order');
-      let cartIds=[]
-      for (const carts of ans) {  
-      const id = carts.id;
-      cartIds.push(id)
-    }
-    // console.log(ans);
-
+    async function removeCart(cart_id) {
+      
       let qry_str = await fetch(`/cart/remove-cart`,{
         method:"PATCH",
         headers:{
           'Content-type':'application/json',
         },
-        body:JSON.stringify({cartIds})
+        body:JSON.stringify({cart_id})
       });
     }
-    async function addOrder() {
-      let ans = document.querySelectorAll('.order');
-      let cartIds=[]
-      for (const carts of ans) {  
-      const id = carts.id;
-      cartIds.push(id)
-    }
+    async function addOrder(cart_id) {
 
       let qry_str = await fetch(`/order/add-order`,{
         method:"POST",
         headers:{
           'Content-type':'application/json',
         },
-        body:JSON.stringify({cartIds})
+        body:JSON.stringify({cart_id})
       });
     }
   </script>

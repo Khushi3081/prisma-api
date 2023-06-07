@@ -5,17 +5,16 @@ import { PrismaService } from 'src/prisma.service';
 export class OrderService {
   constructor(private prisma: PrismaService) {}
 
-  // async create(postData) {
-  //   let data;
-  //   for (const id of postData.cartIds) {
-  //     let data = await this.prisma.order.create({
-  //       data: {
-  //         c_id: parseInt(id),
-  //       },
-  //     });
-  //   }
-  //   return data;
-  // }
+  async create(postData, req) {
+    
+      let data = await this.prisma.order.create({
+        data: {
+          c_id: parseInt(postData.cart_id),
+          user_id: req.cookies.data.id,
+        },
+      });
+    return data;
+  }
 
   // async findAll() {
   //   let data = await this.prisma.cart.findMany({

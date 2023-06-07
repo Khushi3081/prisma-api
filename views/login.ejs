@@ -68,10 +68,17 @@
         })
       });
       response =await qry_req.json();
- 
-      if(response.status ==401) {
-        document.getElementById("error").innerHTML = "Incorrect Credentials"  
+ console.log(response,"{{{{{{{{}}}}}}}}");
+      if(response.statusCode == 500) {
+        swal({
+          text: 'Incorrect Credentials!',
+          type: 'warning',
+        }).then((okay) => {
+          if (okay) {
+            window.location.href = '/login'  
       }
+    })
+    }
       else if(response.data.access_token && response.status == 200) {
       if (response.data.userRole == 1) {
         window.location.href = "/admin";

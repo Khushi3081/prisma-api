@@ -81,8 +81,8 @@ model user {
 }
 model cart_product{
   id  Int @id @default(autoincrement())
-  p_id  Int
-  p_quantuty  Int
+  p_id  Int @unique
+  p_quantuty  Int 
   cart_id Int
   product    product   @relation(fields: [p_id], references: [id])
   cart      cart      @relation(fields: [cart_id], references: [id])
@@ -94,6 +94,7 @@ model cart_product{
 model cart {
   id         Int       @id @default(autoincrement())
   user_id    Int
+  status     String     @default("active")
   created_at DateTime  @default(now())
   updated_at DateTime?
   deleted_at DateTime?

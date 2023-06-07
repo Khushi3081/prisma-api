@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Render,
+  Req,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { createOrderDataDto } from './dto/create-order.dto';
@@ -14,12 +15,12 @@ import { CartService } from 'src/cart/cart.service';
 
 @Controller('order')
 export class OrderController {
-//   constructor(private readonly orderService: OrderService) {}
+  constructor(private readonly orderService: OrderService) {}
 
-//   @Post('add-order')
-//   create(@Body() postData: createOrderDataDto) {
-//     return this.orderService.create(postData);
-//   }
+  @Post('add-order')
+  create(@Body() postData: createOrderDataDto,@Req() req:Request) {
+    return this.orderService.create(postData,req);
+  }
 
 //   @Get()
 //   @Render('order')
