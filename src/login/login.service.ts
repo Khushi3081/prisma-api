@@ -56,8 +56,9 @@ export class LoginService {
         if (compare) {
           const payload = {
             id: findUser.id,
-            role: findUser.candidate.id,
+            role: findUser.candidate.name,
           };
+
           return {
             access_token: await this.jwtService.sign(payload, {
               expiresIn: '30d',
@@ -65,7 +66,7 @@ export class LoginService {
               secret: jwtConstants.secret,
             }),
             userData: findUser,
-            userRole: findUser.candidate.id,
+            userRole: findUser.candidate.name,
           };
         } else {
           throw new UnauthorizedException(

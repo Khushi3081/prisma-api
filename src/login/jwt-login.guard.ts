@@ -54,6 +54,7 @@ export class loginGuard implements CanActivate {
     if (!token) {
       response.redirect('/login');
     }
+
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
@@ -61,12 +62,12 @@ export class loginGuard implements CanActivate {
 
       if (
         array.includes(request.route.path) &&
-        (payload.role == 2 || payload.role == 3)
+        (payload.role == 'user' || payload.role == 'user:admin')
       ) {
-        response.redirect('/dashboard');
+        response.redirect('/main');
       }
 
-      if (user.includes(request.route.path) && payload.role == 1) {
+      if (user.includes(request.route.path) && payload.role == 'admin') {
         response.redirect('/admin');
       }
     } catch {
