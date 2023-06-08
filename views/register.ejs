@@ -32,7 +32,7 @@
         <div>
             <h3>Register yourself</h3>
         </div>
-    <form class="row g-3 needs-validation" action="/auth" method="post">
+    <form class="row g-3 needs-validation" action="/auth" method="post" id="formData">
         <div class="row g-3 align-items-center">
           <div class="col-auto">
             <label for="inputPassword6" class="col-form-label">Name</label>
@@ -47,7 +47,8 @@
             <label for="inputPassword6" class="col-form-label">E-mail</label>
           </div>
           <div class="col-auto">
-            <input type="text" name="email" id="email" class="form-control" aria-labelledby="passwordHelpInline">
+            <input type="text" name="email" id="email" class="form-control" aria-labelledby="passwordHelpInline"  onchange="mail()"
+            onkeypress="mailForm()">
           </div>
         </div>
         <div id="error-email"></div>
@@ -56,7 +57,7 @@
             <label for="inputPassword6"  class="col-form-label">Password</label>
           </div>
           <div class="col-auto">
-            <input type="password" name="password" id="pwd" class="form-control" aria-labelledby="passwordHelpInline">
+            <input type="password" name="password" id="pwd" class="form-control" aria-labelledby="passwordHelpInline" onmouseleave="passForm()">
           </div>
         </div>
         <div class="row g-3 align-items-center">
@@ -70,7 +71,7 @@
           <div id="error"></div>
         
         <div class="col-12">
-          <input type="submit" class="btn btn-primary" >
+          <input type="button" class="btn btn-primary" id="result" value="Submit" onclick="validation()"/>
         </div>
 
         <div>
@@ -98,32 +99,87 @@
 
 <script>
   async function validation() {
-    const name =  document.getElementById('name').value;
-    const email =  document.getElementById('email').value;
-    const password =  document.getElementById('pwd').value;
-    const cpassword =  document.getElementById('cpwd').value;
-    if(name=="") {
-      document.getElementById('error-name').innerHTML = "Name is required"
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('pwd').value;
+    const cpassword = document.getElementById('cpwd').value;
+    if (name == '') {
+      document.getElementById('error-name').innerHTML = 'Name is required';
       return false;
-      // function(e){
-      //   e.preventDefault();
-      // }
+    } else {
+      document.getElementById('error-name').innerHTML = '';
     }
-    if(email == ""){
-      document.getElementById('error-email').innerHTML = "email is required";
+    if (email == ""){
+      document.getElementById('error-email').innerHTML = 'email is required';
       return false;
+    } 
+    else {
+      document.getElementById('error-email').innerHTML = '';
     }
-   if(password != cpassword) {
-    document.getElementById("error").innerHTML = "Confirm password must be same as password";
-    return false;
+    if (password == ""){
+      document.getElementById('error').innerHTML = 'Password is required';
+      return false;
+    } 
+    else {
+      document.getElementById('error').innerHTML = '';
+    }
+    if (cpassword == ""){
+      document.getElementById('error').innerHTML = 'Confirm-password is required';
+      return false;
+    } 
+    else {
+      document.getElementById('error').innerHTML = '';
+    }
+    if (password != cpassword) {
+      document.getElementById('error').innerHTML =
+        'Confirm password must be same as password';
+      return false;
+    } 
+    
+    if(name && email) {
+      document.getElementById('formData').submit();
+    }
   }
-  else{
-    document.getElementById("error").innerHTML = "";
-
+  async function passForm(){
+    const pass= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/;
+    const password = document.getElementById('pwd').value;
+    if(!password.match(pass)) {
+      document.getElementById('error').innerHTML = 'Password must be atleast 8 character and contains one capital letter and one symbol';
+    }
+    else{
+      document.getElementById('error').innerHTML = '';
+    }
   }
-  
+  async function mailForm() {
+    const email = document.getElementById('email').value;
+    let mail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if(!email.match(mail)){
+      document.getElementById('error-email').innerHTML = 'email is not valid';
+    }
+    else{
+      document.getElementById('error-email').innerHTML = '';
+    }
   }
-</script>
+  async function mail(){
+    let mail = document.getElementById("email").value;
+    let qry_str = await fetch(`/auth/mail`,{
+      method:"post",
+      headers:{
+          'Content-type':'application/json',
+        },
+        body:JSON.stringify({mail})
+    });
+    let result = await qry_str.json();
+    if(result[0]) {
+      document.getElementById('error-email').innerHTML = 'Email is already exists';
+      document.getElementById('result').disabled = true;
+    }
+    else{
+      document.getElementById('error-email').innerHTML = '';
+      document.getElementById('result').disabled = false;
+    }
+  }
+  </script>
 
 
 </html>

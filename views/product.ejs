@@ -54,7 +54,8 @@
             name = "productprice"
             id="productprice"
             placeholder="Product Price"
-          /><br>
+            onkeyup="priceCheck()"
+          /></br>
           <input
             type="text"
             class="form-control",
@@ -105,7 +106,27 @@
         sc_dropdown.appendChild(option);
       }
     }
-
+    async function priceCheck() {
+      let price = document.getElementById('productprice').value;
+      let check = /^\d{6}/;
+      let number = /\D/;
+      if(price.match(number)){
+        swal({
+          text: 'Enter only numeric value!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+      if(price.match(check)) {
+        swal({
+          text: 'Enter valid price!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+    }
     async function validation() {
       let category = document.getElementById('category').value;
       let subcategory = document.getElementById('subcategory').value;

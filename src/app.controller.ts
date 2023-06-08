@@ -31,7 +31,7 @@ export class AppController {
   async googleRegister() {}
 
   @Get('/google/callback')
-  @Redirect('/dashboard')
+  @Redirect('/main')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(
     @Req() req,

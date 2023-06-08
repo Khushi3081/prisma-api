@@ -6,7 +6,6 @@ export class ProductService {
   constructor(private prisma: PrismaService) {}
 
   async createProduct(postData, productimage) {
-
     return this.prisma.product.create({
       data: {
         name: postData.productname,
@@ -85,13 +84,17 @@ export class ProductService {
           {
             subCategory: {
               candidate: {
-                name: `%${name}%`,
+                name: {
+                  contains: `%${name}%`,
+                },
               },
             },
           },
         ],
       },
     });
+    console.log(result);
+
     return result;
   }
   async findSub(id: number) {

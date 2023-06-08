@@ -64,7 +64,7 @@ export class ProductController {
   }
 
   @Post('/update/:id')
-  // @Redirect('/product-list/1')
+  @Redirect('/product/product-list/1')
   @UseInterceptors(FileInterceptor('productimage', { dest: './assets' }))
   update(
     @Param('id') id: string,

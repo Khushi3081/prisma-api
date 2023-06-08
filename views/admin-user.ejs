@@ -49,7 +49,7 @@
         <div id="error-name"></div>
         <div class="row g-3 align-items-center">
           <div class="col-auto">
-            <label for="inputPassword6" class="col-form-label">E-mail</label>
+            <label for="inputPassword6" class="col-form-label" >E-mail</label>
           </div>
           <div class="col-auto">
             <input
@@ -58,7 +58,9 @@
               id="email"
               class="form-control"
               aria-labelledby="passwordHelpInline"
-            />
+              onchange="mail()"
+              onkeypress="mailForm()"
+              />
           </div>
           <div id="error-email"></div>
         </div>
@@ -74,6 +76,7 @@
               id="pwd"
               class="form-control"
               aria-labelledby="passwordHelpInline"
+              onmouseleave="passForm()"
             />
           </div>
         </div>
@@ -113,7 +116,7 @@
             </div>
 
             <div class="col-12">
-              <input type="button" class="btn btn-primary" value="Submit" onclick="return validation()"/>
+              <input type="button" class="btn btn-primary" id="result" value="Submit" onclick="validation()"/>
             </div>
           </div>
         </div>
@@ -137,13 +140,9 @@
       const email = document.getElementById('email').value;
       const password = document.getElementById('pwd').value;
       const cpassword = document.getElementById('cpwd').value;
-      let mail = " /\S+@\S+\.\S+/";
       if (name == '') {
         document.getElementById('error-name').innerHTML = 'Name is required';
         return false;
-        // function(e){
-        //   e.preventDefault();
-        // }
       } else {
         document.getElementById('error-name').innerHTML = '';
       }
@@ -151,16 +150,70 @@
         document.getElementById('error-email').innerHTML = 'email is required';
         return false;
       } 
-      
       else {
         document.getElementById('error-email').innerHTML = '';
+      }
+      if (password == ""){
+        document.getElementById('error').innerHTML = 'Password is required';
+        return false;
+      } 
+      else {
+        document.getElementById('error').innerHTML = '';
+      }
+      if (cpassword == ""){
+        document.getElementById('error').innerHTML = 'Confirm-password is required';
+        return false;
+      } 
+      else {
+        document.getElementById('error').innerHTML = '';
       }
       if (password != cpassword) {
         document.getElementById('error').innerHTML =
           'Confirm password must be same as password';
         return false;
-      } else {
+      } 
+      
+      if(name && email) {
         document.getElementById('formData').submit();
+      }
+    }
+    async function passForm(){
+      const pass= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/;
+      const password = document.getElementById('pwd').value;
+      if(!password.match(pass)) {
+        document.getElementById('error').innerHTML = 'Password must be atleast 8 character and contains one capital letter and one symbol';
+      }
+      else{
+        document.getElementById('error').innerHTML = '';
+      }
+    }
+    async function mailForm() {
+      const email = document.getElementById('email').value;
+      let mail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+      if(!email.match(mail)){
+        document.getElementById('error-email').innerHTML = 'email is not valid';
+      }
+      else{
+        document.getElementById('error-email').innerHTML = '';
+      }
+    }
+    async function mail(){
+      let mail = document.getElementById("email").value;
+      let qry_str = await fetch(`/auth/mail`,{
+        method:"post",
+        headers:{
+            'Content-type':'application/json',
+          },
+          body:JSON.stringify({mail})
+      });
+      let result = await qry_str.json();
+      if(result[0]) {
+        document.getElementById('error-email').innerHTML = 'Email is already exists';
+        document.getElementById('result').disabled = true;
+      }
+      else{
+        document.getElementById('error-email').innerHTML = '';
+        document.getElementById('result').disabled = false;
       }
     }
   </script>

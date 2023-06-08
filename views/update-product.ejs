@@ -29,7 +29,7 @@
   </style>
   <body>
     <div class="container">
-      <form action="/product/update/<%=data[0].id%>" method="post" enctype="multipart/form-data">
+      <form action="/product/update/<%=data[0].id%>" method="post" enctype="multipart/form-data" id="productInfo">
         <div class="mb-3">
           <label for="formGroupExampleInput" class="form-label"
             >Edit Product</label
@@ -74,9 +74,10 @@
             type="text"
             class="form-control",
             name = "productprice"
-            id="formGroupExampleInput"
+            id="productprice"
             value="<%= data[0].price %>"
             placeholder="Product Price"
+            onkeyup="priceCheck()"
           /><br>
           <input
             type="text"
@@ -124,6 +125,27 @@
     }
   </script>
   <script>
+     async function priceCheck() {
+      let price = document.getElementById('productprice').value;
+      let check = /^\d{6}/;
+      let number = /\D/;
+      if(price.match(number)){
+        swal({
+          text: 'Enter only numeric value!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+      if(price.match(check)) {
+        swal({
+          text: 'Enter valid price!',
+          confirmButtonColor: '#ff0000',
+          type: 'warning',
+        })
+        return false;
+      }
+    }
     async function validate() {
       let id = document.getElementById('p_id').value;
       let c_id = document.getElementsByName('c_id')[0].value;
@@ -172,7 +194,7 @@
         })
         return false;
       }
-      if(category && name && Price && quantity && image){
+      if(category && name && price && quantity && image){
         document.getElementById("productInfo").submit();
         return true;
       }
