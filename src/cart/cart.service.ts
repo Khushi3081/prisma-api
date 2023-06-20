@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { request } from 'express';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -28,21 +27,6 @@ export class CartService {
       },
     });
 
-    // let data = await this.prisma.cart_product.upsert({
-    //   where: {
-    //     p_id: parseInt(req.body.ids),
-    //   },
-    //   update: {
-    //     p_quantuty: {
-    //       increment: 1,
-    //     },
-    //   },
-    //   create: {
-    //     p_id: parseInt(req.body.ids),
-    //     cart_id: cartData[0].id,
-    //     p_quantuty: 1,
-    //   },
-    // });
     if (cartData[0].cart_product[0]) {
       return await this.prisma.cart_product.updateMany({
         where: {
@@ -61,7 +45,8 @@ export class CartService {
           },
         },
       });
-    } else {
+    } 
+    else {
       return await this.prisma.cart_product.create({
         data: {
           p_id: parseInt(req.body.ids),
@@ -118,7 +103,7 @@ export class CartService {
     return this.prisma.user.findMany({});
   }
 
-  // //delete cart whn order is placed
+   //delete cart whn order is placed
   async removeCart(postData, req) {
     let data;
     data = await this.prisma.cart.update({
@@ -139,7 +124,7 @@ export class CartService {
     return { data, newCart };
   }
 
-  // //delete quantity
+  //delete quantity
   async removeProduct(id: number) {
     let product = await this.prisma.cart_product.findMany({
       where: {

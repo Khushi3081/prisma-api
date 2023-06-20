@@ -1,9 +1,5 @@
 import { Get, Injectable, Render } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { categoryDataDto } from './dto/category.dto';
-import { identity } from 'rxjs';
-import { log } from 'console';
-import { request } from 'express';
 
 @Injectable()
 export class CategoryService {
@@ -17,10 +13,9 @@ export class CategoryService {
         },
       },
     });
-    // console.log(result);
-
     return result;
   }
+
   async createCategory(postData) {
     return this.prisma.category.create({
       data: {
@@ -28,7 +23,8 @@ export class CategoryService {
       },
     });
   }
-  async showlist(id: number, request) {
+
+  async showlist(id: number) {
     let count = await this.prisma.category.aggregate({
       _count: {
         id: true,
@@ -37,6 +33,7 @@ export class CategoryService {
         deleted_at: null,
       },
     });
+
     let total = count._count.id;
     let total_table = await Math.ceil(total / 3);
     let page_no = id || 1;

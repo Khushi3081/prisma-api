@@ -18,10 +18,6 @@ import { CartService } from 'src/cart/cart.service';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  // @Get('')
-  // @Render('order-list')
-  // root(){}
-
   @Post('add-order')
   create(@Body() postData: createOrderDataDto, @Req() req: Request) {
     return this.orderService.create(postData, req);
@@ -34,13 +30,4 @@ export class OrderController {
     return { data };
   }
 
-  //   @Get(':id')
-  //   findOne(@Param('id') id: string) {
-  //     return this.orderService.findOne(+id);
-  //   }
-
-  //   @Delete(':id')
-  //   remove(@Param('id') id: string) {
-  //     return this.orderService.remove(+id);
-  //   }
 }

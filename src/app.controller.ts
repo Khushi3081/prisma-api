@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  HttpStatus,
   Redirect,
   Render,
   Req,
@@ -13,7 +12,6 @@ import { AppService } from './app.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth/auth.service';
-import { Request } from 'express';
 import { LoginService } from './login/login.service';
 import { jwtConstants } from './login/constants';
 

@@ -3,18 +3,15 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Render,
   Res,
   Req,
-  Query,
 } from '@nestjs/common';
 import { ForgotPasswordService } from './forgot-password.service';
-import { CreateForgotPasswordDto } from './dto/create-forgot-password.dto';
 import { UpdateForgotPasswordDto } from './dto/update-forgot-password.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('forgot-password')
 export class ForgotPasswordController {
@@ -24,24 +21,36 @@ export class ForgotPasswordController {
   @Render('forgot-password.ejs')
   root() {}
 
-  @Post()
-  create(@Req() req: Request) {
-    return this.forgotPasswordService.findEmail(req);
+  @Post('/send')
+  async create(@Req() req: Request, @Res() res: Response) {
+    let data = await this.forgotPasswordService.findEmail(req);
+
+    if (data) {
+      res.json(data);
+    } else {
+      res.json(false);
+    }
   }
 
-  @Get('reset-password')
-  @Render('reset-password')
-  reset() {}
-
-  @Post('reset-password')
-  updatePass(
+  @Post('checkOtp')
+  async checkOtp(
     @Body() postData: UpdateForgotPasswordDto,
-    @Query() query,
     @Res() res: Response,
+    @Req() req: Request,
   ) {
-    return this.forgotPasswordService.update(postData, query, res);
+    let data = await this.forgotPasswordService.check(postData, res, req);
+
+    if (data == 'token is not valid') {
+      res.json(false);
+    } else {
+      res.json(data);
+    }
   }
 
+  @Post('reset-Password')
+  async updatePass(@Req() req: Request, @Res() res: Response) {
+    return await this.forgotPasswordService.update(req, res);
+  }
   // @Patch(':id')
   // update(
   //   @Param('id') id: string,
@@ -49,9 +58,4 @@ export class ForgotPasswordController {
   // ) {
   //   return this.forgotPasswordService.update(+id, updateForgotPasswordDto);
   // }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.forgotPasswordService.remove(+id);
-  }
 }

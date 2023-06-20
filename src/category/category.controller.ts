@@ -12,7 +12,6 @@ import {
 import { categoryDataDto } from './dto/category.dto';
 import { CategoryService } from './category.service';
 import { updateCategoryDataDto } from './dto/update-category.dto';
-import { request } from 'express';
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -34,7 +33,7 @@ export class CategoryController {
   @Get('category-list/:id')
   @Render('category-list')
   async list(@Param('id') id: number, @Req() request: Request) {
-    let data = await this.categoryService.showlist(+id, request);
+    let data = await this.categoryService.showlist(+id);
     return { data: data };
   }
 

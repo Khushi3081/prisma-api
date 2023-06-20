@@ -5,12 +5,10 @@ import {
   Param,
   Patch,
   Post,
-  Redirect,
   Render,
   Req,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { request } from 'http';
 import { updateCartDataDto } from './dto/update-cart.dto';
 
 @Controller('cart')
@@ -18,7 +16,6 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post('addCart')
-  // @Redirect('/cart/cart-list/1')
   async addProduct(@Req() req) {
     let data = await this.cartService.addProduct(req);
     return data;
@@ -33,7 +30,6 @@ export class CartController {
   @Render('cart-list')
   async showProduct(@Req() req: Request) {
     let data = await this.cartService.showProduct(req);
-    // let user_data = await this.cartService.showUser();
     return { data };
   }
   @Patch('remove-cart')

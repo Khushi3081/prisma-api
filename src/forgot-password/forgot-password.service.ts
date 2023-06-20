@@ -3,10 +3,9 @@ import { CreateForgotPasswordDto } from './dto/create-forgot-password.dto';
 import { UpdateForgotPasswordDto } from './dto/update-forgot-password.dto';
 import { PrismaService } from 'src/prisma.service';
 import { MailerService } from '@nestjs-modules/mailer';
-import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
-import { request } from 'http';
+
 let saltRounds = 10;
 @Injectable()
 export class ForgotPasswordService {
@@ -20,10 +19,16 @@ export class ForgotPasswordService {
     const user = await this.prisma.user.findFirst({
       where: { email: String(email) },
     });
+
     if (!user) {
       throw new Error('Email does not exists..');
     }
-    let resetLink = crypto.randomBytes(64).toString('hex');
+    let number = '';
+    for (let i = 0; i < 4; i++) {
+      number += [Math.floor(Math.random() * 10)];
+    }
+    let otp = number;
+    // let resetLink = crypto.randomBytes(64).toString('hex');
 
     await this.prisma.forgotPassword.upsert({
       where: {
@@ -31,40 +36,51 @@ export class ForgotPasswordService {
       },
       create: {
         user: { connect: { id: user.id } },
-        token: resetLink,
+        token: otp,
         updated_at: new Date(),
       },
       update: {
-        token: resetLink,
+        token: otp,
         user_id: user.id,
       },
     });
-    let link = `/forgot-password/reset-password/?token=${resetLink}&id=${user.id}`;
+    // let link = `/forgot-password/reset-password/?token=${resetLink}&id=${user.id}`;
     this.mailerService.sendMail({
       to: 'rachchh.khushi30@gmail.com',
       from: 'rachchh.khushi30@gmail.com',
       subject: 'Forgot Password Change',
       text: 'Welcome',
-      html: `<b> ${link} <b>`,
+      html: `<p style="font-size:3 rem,font-weight:bold">${otp}</p>`,
     });
 
-    return 'Check your email';
+    return {
+      user_id: user.id,
+    };
   }
 
-  async update(postData, query, res: Response) {
+  async check(postData, res: Response, req) {
     let findUserdata = await this.prisma.forgotPassword.findFirst({
       where: {
-        id: query.id,
+        user_id: parseInt(req.body.id),
       },
     });
+
     let savedToken = findUserdata.token;
-    if (savedToken != query.token) {
-      throw new Error('token is not valid');
+
+    if (savedToken != req.body.otp) {
+      return 'token is not valid';
+    } else {
+      return {
+        user_id: findUserdata.user_id,
+      };
     }
-    const hashPass = await bcrypt.hash(postData.password, saltRounds);
+  }
+
+  async update(req, res) {
+    const hashPass = await bcrypt.hash(req.body.password, saltRounds);
     const addUpdate = await this.prisma.user.update({
       where: {
-        id: findUserdata.user_id,
+        id: parseInt(req.body.u_id),
       },
       data: {
         password: hashPass,
@@ -73,7 +89,4 @@ export class ForgotPasswordService {
     res.redirect('/login');
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} forgotPassword`;
-  }
 }

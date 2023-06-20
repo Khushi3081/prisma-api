@@ -30,19 +30,4 @@ export class MainController {
   create(@Body() createMainDto: CreateMainDto) {
     return this.mainService.create(createMainDto);
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.mainService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMainDto: UpdateMainDto) {
-    return this.mainService.update(+id, updateMainDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.mainService.remove(+id);
-  }
 }

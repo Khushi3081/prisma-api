@@ -3,23 +3,18 @@ import {
   Controller,
   Get,
   Post,
-  Redirect,
   Render,
-  Res,
-  UseGuards,
   Response,
   HttpStatus,
   Req,
 } from '@nestjs/common';
 import { LoginService } from './login.service';
 import { loginDataDto } from './dto/login.dto';
-import { loginGuard } from './jwt-login.guard';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { AuthEntity } from './entitities/login-entity';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'src/auth/auth.service';
 
 @ApiTags('auth')
@@ -69,5 +64,4 @@ export class LoginController {
       });
     }
   }
-
 }

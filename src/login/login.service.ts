@@ -1,36 +1,16 @@
 import {
   Injectable,
   NotFoundException,
-  Redirect,
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { loginDataDto } from '../login/dto/login.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { log } from 'console';
 import { jwtConstants } from './constants';
 @Injectable()
 export class LoginService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
-
-  // async checkUser(postData: loginDataDto) {
-  //   const email = postData.email;
-  //   const user = await this.prisma.user.findFirst({
-  //     where: { email: String(email) },
-  //   });
-
-  //   const pass = postData.password;
-  //   const answer = await bcrypt.compare(pass, user.password);
-  //   console.log(answer);
-
-  //   if (user && answer) {
-  //     const { password, ...result } = user;
-  //     // console.log(user);
-  //     return result;
-  //   }
-  //   return null;
-  // }
 
   async login(postData: loginDataDto) {
     // const email = postData.email;
@@ -78,12 +58,4 @@ export class LoginService {
       console.log(error);
     }
   }
-  // async genrateCookie(access_token, req, res) {
-
-  //   res.cookie('access_token', access_token, {
-  //     expires: new Date(new Date().getTime() + 30 * 1000),
-  //     sameSite: 'strict',
-  //     httpOnly: true,
-  //   });
-  // }
 }

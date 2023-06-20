@@ -24,7 +24,10 @@ export class loginGuard implements CanActivate {
       request.route.path == '/login/google' ||
       request.route.path == '/dashboard' ||
       request.route.path == '/auth' ||
-      request.route.path == '/forgot-password'
+      request.route.path == '/forgot-password' ||
+      request.route.path == '/forgot-password/send' ||
+      request.route.path == '/forgot-password/checkOtp' ||
+      request.route.path == '/forgot-password/reset-Password'
     ) {
       return true;
     }

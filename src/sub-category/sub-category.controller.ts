@@ -5,9 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Render,
-  Redirect,
   Query,
 } from '@nestjs/common';
 import { SubCategoryService } from './sub-category.service';

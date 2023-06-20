@@ -8,6 +8,6 @@ import { CartModule } from 'src/cart/cart.module';
 @Module({
   imports: [],
   controllers: [AuthController],
-  providers: [AuthService, PrismaService, JwtService, CartModule],
+  providers: [AuthService, JwtService, CartModule, PrismaService],
 })
 export class AuthModule {}
