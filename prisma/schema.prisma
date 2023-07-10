@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model role {
+  id    Int    @id @default(autoincrement())
+  name  String
+  users user[]
+}
+
+
+model category {
+  id         Int           @id @default(autoincrement())
+  name       String
+  created_at DateTime      @default(now())
+  deleted_at DateTime?
+  updated_at DateTime?
+  products   product[]
+  subCats    subCategory[]
+
+  @@map("category")
+}
+
+model subCategory {
+  id         Int       @id @default(autoincrement())
+  name       String
+  c_id       Int?
+  created_at DateTime  @default(now())
+  deleted_at DateTime?
+  updated_at DateTime?
+  products   product[]
+  candidate  category? @relation(fields: [c_id], references: [id])
+
+  @@index([c_id], map: "subCategory_c_id_fkey")
+  @@map("subCategory")
+}
+
+model product {
+  id          Int          @id @default(autoincrement())
+  name        String
+  price       String
+  quantity    String
+  c_id        Int?
+  sub_id      Int?
+  created_at  DateTime     @default(now())
+  deleted_at  DateTime?
+  updated_at  DateTime?
+  image_name  String
+  image_path  String
+  cart_product       cart_product[]
+  category    category?    @relation(fields: [c_id], references: [id])
+  subCategory subCategory? @relation(fields: [sub_id], references: [id])
+
+  @@index([c_id], map: "product_c_id_fkey")
+  @@index([sub_id], map: "product_sub_id_fkey")
+  @@map("product")
+}
+
+model user {
+  id                 Int            @id @default(autoincrement())
+  name               String
+  email              String @unique
+  password           String?
+  role_id            Int?           @default(2)
+  created_at         DateTime       @default(now())
+  deleted_at         DateTime?
+  updated_at         DateTime?
+  google_provider_id String?
+  register_type      register_type?
+  carts              cart[]
+  orders  order[]
+  candidate          role?          @relation(fields: [role_id], references: [id])
+  forgotpassword forgotPassword?
+
+  @@index([role_id], map: "user_role_id_fkey")
+}
+model cart_product{
+  id  Int @id @default(autoincrement())
+  p_id  Int 
+  p_quantuty  Int 
+  cart_id Int
+  product    product   @relation(fields: [p_id], references: [id])
+  cart      cart      @relation(fields: [cart_id], references: [id])
+  @@index([p_id], map: "cart_p_id_fkey")
+  @@index([cart_id], map: "cart_cart_id_fkey")
+
+
+}
+model cart {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  status     String     @default("active")
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+  user       user      @relation(fields: [user_id], references: [id])
+  orders order[] 
+  cart_product       cart_product[]
+
+  @@index([user_id], map: "cart_user_id_fkey")
+  @@map("cart")
+}
+
+model order {
+  id    Int     @id @default(autoincrement())
+  c_id   Int
+  user_id Int    
+  created_at DateTime @default(now())
+
+  cart cart @relation(fields: [c_id],references: [id])
+  user user @relation(fields: [user_id],references: [id])
+
+  @@index([c_id], map: "order_c_id_fkey")
+  @@index([user_id],map:"order_user_id_fkey")
+  @@map("order")
+}
+enum register_type {
+  Platform
+  google
+}
+
+model forgotPassword {
+  id   Int  @id @default(autoincrement())
+  user_id  Int  @unique
+  token   String
+  created_at DateTime @default(now())
+  updated_at DateTime 
+  user user @relation(fields: [user_id],references: [id])
+
+  @@index([user_id],map: "forgotpassword_user_id_fkey")
+  @@map("forgotPassword")
+}

@@ -1,0 +1,14 @@
+-- AlterTable
+ALTER TABLE `category` ADD COLUMN `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    ADD COLUMN `deleted_at` DATETIME(3) NULL,
+    ADD COLUMN `updated_at` DATETIME(3) NULL;
+
+-- AlterTable
+ALTER TABLE `product` ADD COLUMN `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    ADD COLUMN `deleted_at` DATETIME(3) NULL,
+    ADD COLUMN `updated_at` DATETIME(3) NULL;
+
+-- AlterTable
+ALTER TABLE `subCategory` ADD COLUMN `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    ADD COLUMN `deleted_at` DATETIME(3) NULL,
+    ADD COLUMN `updated_at` DATETIME(3) NULL;

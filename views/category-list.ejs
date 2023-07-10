@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=<device-width>, initial-scale=1.0" />
+  <title>Category-List</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <style>
+    td {
+      padding-right: 2rem;
+    }
+
+    .button {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background-color: crimson;
+      text-decoration: none;
+      text-align: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .back-button {
+      border-radius: 0.25rem;
+      border: 1px solid;
+      padding: 0.5rem 1rem;
+      color: #fff;
+      background-color: blueviolet;
+      text-decoration: none;
+    }
+    .edit-style {
+    display: block;
+    width: 80px;
+    height: 35px;
+    background: #4E9CAF;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
+    text-decoration: none;
+    }
+
+  </style>
+
+
+</head>
+
+<body>
+  <div class="card">
+    <div class="card-header">Category data</div>
+    <div class="card-body">
+      <input type="search" placeholder="Search" aria-label="Search" id="categoryName" oninput="searchData()"/>
+      
+
+      <div class="table-responsive">
+        <div id="show"></div>
+        
+        <div id="hide">
+        <table id="myTable">
+          <thead>
+            <tr>
+              <td>Id</td>
+              <td>Category-Name</td>
+            </tr>
+          </thead>
+          <tbody>
+            <%data.data.forEach((element)=>{%>
+                <tr>
+                  <td><%-element.id%></td>
+                  <td><%-element.name%></td>
+                  <td><a class="edit-style" href="/category/data/<%-element.id%>">Edit</a></td>
+                  <td><input class="edit-style" type="button" onclick="deleteData('<%= element.id %>')" value="Delete"></td>
+                </tr>
+                <%})%>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+    <div>
+      <% for(let i=1;i<=data.total_table;i++) {%>
+        <a class="button" href="/category/category-list/<%= i %>">
+          <%=i %>
+        </a>
+        <% } %>
+    </div></br>
+    <div>
+      <a class="back-button" href="/admin">Back to HomePage</a>
+    </div>
+  </div>
+</body>
+
+</html>
+</body>
+<script>
+  async function searchData() {
+    let data = document.getElementById("categoryName").value;
+    let qry_str = await fetch(`/category/search/?name=${data}`);
+    let result = await qry_str.json();
+    if (result[0]) {
+
+      let showData = document.getElementById("hide");
+      showData.style.display = "none";
+      let htmlContent = ""
+      htmlContent += `<table id="myTable">
+          <thead>
+            <tr>
+              <td>Id</td>
+              <td>Category-Name</td>
+            </tr>
+          </thead>`
+          for(let i=0;i<result.length;i++){
+            htmlContent +=`<tbody>
+                <tr>
+                  <td>${result[i].id}</td>
+                  <td>${result[i].name}</td>
+                  </tr>`
+                }
+        htmlContent +=` </tbody>
+        </table>`
+      
+        document.getElementById("show").innerHTML = htmlContent;
+    }
+    else {
+      let showData = document.getElementById("hide");
+      showData.style.display = "none";
+      let htmlContent = `
+      <div class="col-sm-3" >
+        <h4>Data not found</h4>
+        </div>`
+      document.getElementById("show").innerHTML = htmlContent;
+
+    }
+  }
+  async function deleteData(id) {
+    if (confirm("Are you sure you want to delete the data?") == true) {
+      let qry_str = await fetch(`/category/delete/${id}`, {
+        method: "PATCH",
+        headers: {
+          'Content-type': 'application/json',
+        }
+      });
+      window.location.reload()
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+</script>
+
+</html>

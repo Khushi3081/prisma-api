@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=<device-width>, initial-scale=1.0" />
+  <title>Document</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+  <style>
+    .button {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-color: crimson;
+        text-decoration: none;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+    }
+    td{
+      padding-right: 2rem;
+    }
+    .back-button {
+      border-radius: 0.25rem;
+      border: 1px solid;
+      padding: 0.5rem 1rem;
+      color: #fff;
+      background-color: blueviolet;
+      text-decoration: none;
+    }
+    .img-style{
+      height: 50px;
+      width: 90px;
+    }
+    .edit-style {
+    display: block;
+    width: 80px;
+    height: 35px;
+    background: #4E9CAF;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
+    text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="card-header">Product data</div>
+    <div class="card-body">
+      <input type="search" placeholder="Search" aria-label="Search" id="productName" onkeyup="searchData()"/>
+      <div id="show"></div>
+
+      <div id="hide">
+        <div class="table-responsive">
+        <table id="myTable">
+          <thead>
+            <tr>
+              <td>Id</td>
+              <td>Category-Name</td>
+              <td>Sub-category-Name</td>
+              <td>Product-Name</td>
+              <td>Product-price</td>
+              <td>Product-Quantity</td>
+              <td>Product Image</td>
+            </tr>
+          </thead>
+          <tbody>
+            <%data.data.forEach((e)=>{%>
+              <tr>
+                <td><%-e.id%></td>
+                <td><%-e.subCategory.candidate.name%></td>
+                <td><%-e.subCategory.name%></td>
+                <td><%-e.name%></td>
+                <td><%-e.price%></td>
+                <td><%-e.quantity%></td>
+                <td><img class="img-style" src="/<%=e.image_path.slice(7)%>"></td>
+                <td><a class="edit-style" href="/product/<%-e.id%>">Edit</a></td>
+                <td><input class="edit-style" type="button" onclick="deleteData('<%= e.id %>')"value="Delete" ></td>
+
+              </tr>
+                  <%})%>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+    <div>
+        <% for(let i=1;i<=data.total_table;i++) {%>
+          <a class="button" href="/product/product-list/<%= i %>"><%=i %></a>
+        <% } %>
+    </div>
+  </div></br>
+  <div>
+    <a class="back-button" href="/admin" >Back to HomePage</a>
+  </div>  
+</body>
+
+</html>
+</body>
+<script>
+async function searchData() {
+  let data = document.getElementById("productName").value;
+  let qry_str = await fetch(`/product/search/?name=${data}`);
+  let result = await qry_str.json();
+  if (result[0]) {
+    let showData = document.getElementById("hide");
+      showData.style.display = "none";
+      let htmlContent = ""
+      htmlContent +=`<table id="myTable">
+          <thead>
+            <tr>
+              <td>Id</td>
+              <td>Category-Name</td>
+              <td>Sub-category-Name</td>
+              <td>Product-Name</td>
+              <td>Product-price</td>
+              <td>Product-Quantity</td>
+              <td>Product Image</td>
+            </tr>
+          </thead>
+          <tbody>`
+            for(let i=0;i<result.length;i++) {
+      htmlContent += `<tr>
+                <td>${result[i].id}</td>
+                <td>${result[i].subCategory.candidate.name}</td>
+                <td>${result[i].subCategory.name}</td>
+                <td>${result[i].name}</td>
+                <td>${result[i].price}</td>
+                <td>${result[i].quantity}</td>
+                <td><img class="img-style" src="/${result[i].image_path.slice(7)}"></td>
+                <td><a href="/product/${result[i].id}">Edit</a></td>
+                <td><input type="button" onclick="deleteData('${ result[i].id }')"value="Delete" ></td>
+
+              </tr>`
+                }
+      htmlContent += `</tbody>
+                      </table>`
+        document.getElementById("show").innerHTML = htmlContent;
+    }
+    else {
+      let showData = document.getElementById("hide");
+      showData.style.display = "none";
+      let htmlContent = `
+      <div class="col-sm-3" >
+        <h4>Data not found</h4>
+        </div>`
+      document.getElementById("show").innerHTML = htmlContent;
+
+    }
+  }
+  async function deleteData(id) {
+    if(confirm("Are you sure you want to delete the data?") == true ){
+      let qry_str = await fetch(`/product/delete/${id}`,{
+        method:"PATCH",
+        headers:{
+          'Content-type':'application/json',
+        }
+      });
+      window.location.reload()
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+</script>
+</html>
